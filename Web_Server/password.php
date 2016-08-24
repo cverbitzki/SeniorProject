@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>Change Password</title>
+	<title>Manage Accounts</title>
 
 	<link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
 	
@@ -18,7 +18,7 @@
 <nav class = "navbar navbar-default navbar-fixed-top">
 <div class = "container">
 		<span class = "navbar-header">
-			<a class = "navbar-brand" href = "#">Change Password</a>
+			<a class = "navbar-brand" href = "#">Manage Accounts</a>
 		</span>
 		<ul class = "nav navbar-nav navbar-right">
 			<form height = "100" align="center" action = "log.html">

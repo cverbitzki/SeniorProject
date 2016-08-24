@@ -14,19 +14,12 @@
    #}
 
    $sql =<<<EOF
-      SELECT * from activity;
+      select status from activity ORDER BY rowid DESC LIMIT 1;
 EOF;
    $i = 0;
    $ret = $db->query($sql);
-   while($row = $ret->fetchArray(SQLITE3_ASSOC) ){
-      $body[$i] = $row['date'].",".$row['time'].",".$row['status']." \n";
-      $i = $i + 1;
-   }
-   $reversed = array_reverse($body);
-   echo json_encode($reversed);
+   $row = $ret->fetchArray(SQLITE3_ASSOC);
+   echo $row['status'];
 
-	
    $db->close();
 ?>
-
-
