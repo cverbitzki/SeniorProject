@@ -1,0 +1,62 @@
+<html>
+<head>
+        <title>Activity Log</title>
+
+        <link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
+
+        <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <style>
+        .body-content {
+                margin-top:0px;
+        }
+        </style>
+</head>
+<body>
+
+<script>
+var myVar = setInterval(function(){ getLog() }, 1000);
+
+</script>
+
+<table class = "table table-striped">
+        <thead>
+                <tr>
+                        <th class = "col-xs-4">Date</th>
+                        <th class = "col-xs-4">Time </th>
+                        <th class = "col-xs-4">Status</th>
+                </tr>
+        </thead>
+        <tbody id="dataTable">
+        </tbody>
+</table>
+</div>
+
+
+	
+<script type="text/javascript">
+
+// Function to update the entire log onto the website
+function getLog()
+{
+        $.ajax({
+                url:'getLog.php',
+                type: 'get',
+                complete: function (response) {
+                        $("#dataTable").html("");
+                        var body = JSON.parse(response.responseText);
+                        $.each(body, function(index, value) {
+                                var line = value.split(',');
+                                $("#dataTable").append("<tr><td class = 'text-left'>" + line[0] + "</td><td class = 'text-left'>" + line[1] + "</td><td class = 'text-left'>" + line[2] + "</td></tr>");
+                        });
+                },
+//                error: function() {
+//                        alert("Error: Getting log failed. Try refreshing the page.");
+//                }
+        });
+}
+</script>
+</body>
+</html>
+

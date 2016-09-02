@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Camera Feed</title>
+
+	<link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
+	
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+	<style>
+	.body-content {
+		margin-top:0px;
+	}
+	</style>
+</head>
+<body>
+<div class = "container body-content text-center">
+	<div class = "row">
+		<div class = "button" width="2000" height="100">
+			<button class = "btn btn-default col-xs-6" id="btnOn" onclick="pic1()">Camera ON</button>
+			<button class = "btn btn-default col-xs-6" id ="btnOff" onclick="pic2()">Camera OFF</button>
+		</div>
+		<div class="col-xs-12">
+			<small>The Camera is currently <strong id="StatusLabel" class="text-warning">OFF</strong>
+			</small>
+		</div>
+	</div>
+<br/>
+<img id="img" src="" width="500" height="300"/>
+
+<script type="text/javascript">
+pic2();
+
+$(document).ready(function() {
+ $("#btnOn").click(function() {
+  //post to server to update alarm status
+  pic1();
+
+ $.ajax({
+//        url:'setState.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function () {
+    //make the button look depressed
+    $("#btnOn").addClass("active");
+    $("#btnOff").removeClass("active");
+
+    //update status label
+    $("#StatusLabel").removeClass("text-success");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("On");
+    $("#StatusLabel").addClass("text-warning");
+    },
+       error: function () {
+                                                               //if you were really fancy here, you'd use toastr.js
+          alert("An unhandled exception occurred. Please refresh the page and try again.");
+       }
+  });
+
+
+ });
+
+ $("#btnOff").click(function() {
+  //post to server to update alarm status
+  pic2();
+  $.ajax({
+//        url:'setState.php',
+        type: 'post',
+        data: {"armed":"0"},
+        complete: function () {
+    //make the button look depressed
+    $("#btnOff").addClass("active");
+    $("#btnOn").removeClass("active");
+    //update status label
+    $("#StatusLabel").removeClass("text-warning");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("Off");
+    $("#StatusLabel").addClass("text-success");
+        },
+        error: function () {
+        //if you were really fancy here, you'd use toastr.js
+          alert("An unhandled exception occurred. Please refresh the page and try again.");
+        }
+  });
+
+ });
+
+});
+        function pic1()
+        {
+            document.getElementById("img").src = "cam_pic.jpg";
+        }
+        function pic2()
+        {
+            document.getElementById("img").src ="cam_off.jpg";
+        } </script>
+
+
+
+
+
+
+</body>
+</html>
+
+
+

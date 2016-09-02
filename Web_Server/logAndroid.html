@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Activity Log</title>
+
+	<link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
+	
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+	<style>
+	.body-content {
+		margin-top:0px;
+	}
+	</style>
+</head>
+<body>
+
+
+<div class = "container body-content text-center">
+	<div class = "row">
+		<div class = "btn-group col-xs-14 col-xs-offset-14">
+			<button class = "btn btn-default col-xs-14" id="btnLock">Lock Door</button>
+			<button class = "btn btn-default col-xs-14" id ="btnUnlock">Unlock Door</button>
+		</div>
+		<div class="col-xs-12">
+			<small>The Door is currently <strong id="StatusLabel" class="text-warning"> . . . .</strong>
+			</small>
+		</div>
+
+	</div>
+
+	
+<script>
+var myVar = setInterval(function(){ GetStatus() }, 1000);
+
+</script>
+
+ 
+
+<script type="text/javascript">
+
+function GetStatus()
+{
+ var State = 0;
+
+ //request alarm status from server
+ $.ajax({
+        url:'getState.php',
+        type:'get',
+       	success: function (response) {
+	    SetStatusLabel(response);
+	},
+//       error: function () {
+      //if you were really fancy here, you'd use toastr.js
+//         alert("An unhandled exception occurred.");
+//       }
+ });
+}
+
+
+// alarmState: 0 - Disarmed, 1 - Armed, 2 - Tripped
+function SetStatusLabel(State)
+{
+
+ switch(State)
+ {
+  case "unlocked":
+   //make the button look depressed
+   $("#btnUnlock").addClass("active");
+   $("#btnLock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-warning");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("Unlocked");
+   $("#StatusLabel").addClass("text-success");
+   break;
+
+  case "locked":
+   //make the button look depressed
+   $("#btnLock").addClass("active");
+   $("#btnUnlock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-success");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("Locked");
+   $("#StatusLabel").addClass("text-warning");
+   break;
+
+ }
+}
+$(document).ready(function() {
+ $("#btnLock").click(function() {
+  //post to server to update alarm status
+ $.ajax({
+        url:'setinfo.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnLock").addClass("active");
+    $("#btnUnlock").removeClass("active");
+
+    //update status label
+    $("#StatusLabel").removeClass("text-success");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("Locked");
+    $("#StatusLabel").addClass("text-warning");
+    },
+ //      error: function () {
+       //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //      }
+  });
+ });
+
+ $("#btnUnlock").click(function() {
+  //post to server to update alarm status
+  $.ajax({
+        url:'setinfo.php',
+        type: 'post',
+        data: {"unarmed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnUnlock").addClass("active");
+    $("#btnLock").removeClass("active");
+    //update status label
+    $("#StatusLabel").removeClass("text-warning");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("Unlocked");
+    $("#StatusLabel").addClass("text-success");
+        },
+ //       error: function () {
+        //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //       }
+  });
+ });
+});
+
+</script>
+</body>
+</html>
+
