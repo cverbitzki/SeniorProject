@@ -7,6 +7,7 @@
 
 #define output_low(port,pin) port &= ~(1<<pin)
 #define output_high(port,pin) port |= (1<<pin)
+#define toggle_pin(port,pin) port ^= (1<<pin)
 #define set_output(portdir,pin) portdir |= (1<<pin)
 
 
@@ -17,21 +18,25 @@
 
 int INIT_TRIAC()
 {
-	T_PORT |= (1 << _PIN);
+	set_output(T_PORT, T_PIN);
 }
 
 int TRIAC(int status)
 {
 	switch(status) {
+		/* 	Could be the toggle case	*/
 		case -1:
-			output_low(T_PORT, T_PIN);
-			break;
+			toggle_pin(T_PORT, T_PIN);
+			return 0;
+		/*	Shut off TRIAC 	*/
 		case 0:
 			output_low(T_PORT, T_PIN);
 			break;	
+		/*	Turn on TRIAC 	*/
 		case 1:
 			output_high(T_PORT, T_PIN);
 			break;
+		/* Error on else	*/
 		default:
 			return -1;
 	} 
