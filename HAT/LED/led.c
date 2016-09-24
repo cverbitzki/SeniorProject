@@ -1,4 +1,7 @@
-// Jordan Millett
+/*	led.c	*/
+/*	Jordan Millett */
+/*	19 Sept 2016	*/
+/*	LED Control	*/
 #include <avr/io.h>     // For AVR registers
 
 /*
@@ -26,9 +29,9 @@ int main()
 		output_high(PORTC, PC4);
 		for(i = 0; i < 10000; i++) {
 			PORTC |= (1<<PC5);
-		//	_delay_us(.95);
+			_delay_us(10);
 			PORTC &= ~(1<<PC5);
-		//	_delay_us(.35);
+			_delay_us(10);
 		}
 		output_low(PORTC, PC4);
 		_delay_ms(100);
