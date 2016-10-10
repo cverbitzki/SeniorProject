@@ -51,8 +51,8 @@ public class activityLog extends AppCompatActivity {
     public static String currentContent;
     final activityLog ma = this;
     // URL Address
-    String url = "http://192.168.1.2/getLogAndroid.php";
-    String url2 = "http://192.168.1.2/getState.ph";
+    String url = "http://192.168.1.9/getLogAndroid.php";
+    String url2 = "http://192.168.1.9/getState.ph";
 
     ProgressDialog mProgressDialog;
     String title2;
@@ -61,43 +61,22 @@ public class activityLog extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log);//
-        //listView = (ListView) findViewById(R.id.listView);
+        setContentView(R.layout.activity_log);
 
-
-
-        /* For at OT
-        wv1=(WebView)findViewById(R.id.webView);
-        wv1.setWebViewClient(new MyBrowser());
-        wv1.getSettings().setLoadsImagesAutomatically(true);
-        wv1.getSettings().setJavaScriptEnabled(true);
-        wv1.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv1.loadUrl("http://192.168.1.2/logAndroid.html");
-
-        wv2=(WebView)findViewById(R.id.webView);
-        wv2.setWebViewClient(new MyBrowser());
-        wv2.getSettings().setLoadsImagesAutomatically(true);
-        wv2.getSettings().setJavaScriptEnabled(true);
-        wv2.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv2.loadUrl("http://192.168.1.2/logAndroid.html");
-*/
         // For on the Tempest Network
         wv1=(WebView)findViewById(R.id.webView);
         wv1.setWebViewClient(new MyBrowser());
         wv1.getSettings().setLoadsImagesAutomatically(true);
         wv1.getSettings().setJavaScriptEnabled(true);
         wv1.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv1.loadUrl("http://141.114.212.46/logAndroid.html");
+        wv1.loadUrl("http://192.168.1.9/logAndroid.html");
 
         wv2=(WebView)findViewById(R.id.activityLog);
         wv2.setWebViewClient(new MyBrowser());
         wv2.getSettings().setLoadsImagesAutomatically(true);
         wv2.getSettings().setJavaScriptEnabled(true);
         wv2.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv2.loadUrl("http://141.114.212.46/logAndroidTable.html");
-
-        // Execute Title AsyncTask
-        //new Title().execute();
+        wv2.loadUrl("http://192.168.1.9/logAndroidTable.html");
 
     }
 

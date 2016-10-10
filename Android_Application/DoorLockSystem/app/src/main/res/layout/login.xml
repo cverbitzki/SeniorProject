@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.cverb.doorlocksystem.Login"
+    android:background="#223283">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageView"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/imageView2"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Log In"
+        android:id="@+id/title"
+        android:textSize="60dp"
+        android:textColor="#ffffff"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/email"
+        android:layout_marginTop="40dp" />
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:id="@+id/imageView2"
+        android:src="@drawable/white"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/email"
+        android:layout_alignTop="@+id/imageView2"
+        android:layout_marginTop="20dp"
+        android:layout_alignEnd="@+id/imageView2"
+        android:layout_alignParentStart="true"
+        android:hint="Enter EMail"
+        android:textAlignment="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textIsSelectable="true"
+        android:textSize="25dp"
+        android:textColor="#020101"
+        android:textColorHint="#000000" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password"
+        android:hint="Enter Password"
+        android:textAlignment="center"
+        android:layout_below="@+id/email"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/imageView2"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:password="true"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:textColorHint="#000000" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="LOG IN"
+        android:id="@+id/login"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textColor="#ffffff"
+        android:background="#24c70e"
+        android:textSize="25dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:id="@+id/register"
+        android:layout_below="@+id/login"
+        android:layout_alignEnd="@+id/login"
+        android:layout_alignStart="@+id/login"
+        android:layout_marginTop="20dp"
+        android:background="#2249f9"
+        android:textColor="#ffffff"
+        android:singleLine="false" />
+</RelativeLayout>
+
+
