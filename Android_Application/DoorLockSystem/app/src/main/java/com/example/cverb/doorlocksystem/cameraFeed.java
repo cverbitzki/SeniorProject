@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionMenuView;
 import android.view.View;
@@ -37,7 +38,6 @@ public class cameraFeed extends Activity {
         // Capture button click
         take_pic.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
-                // Execute Title AsyncTask
                 new Title().execute();
             }
         });
@@ -61,7 +61,7 @@ public class cameraFeed extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                // Download image from URL
+
                 InputStream input = new java.net.URL("http://192.168.1.9/cam_pic.jpg").openStream();
                 // Decode Bitmap
                 bitmap = BitmapFactory.decodeStream(input);
@@ -80,4 +80,5 @@ public class cameraFeed extends Activity {
             mProgressDialog.dismiss();
         }
     }
+
 }

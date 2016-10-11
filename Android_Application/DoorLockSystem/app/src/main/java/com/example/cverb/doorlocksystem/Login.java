@@ -86,7 +86,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Login.this, "Create Account Selected", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), Dashboard.class);
+                Intent i = new Intent(getApplicationContext(), CreateAccount.class);
                 startActivity(i);
             }
         });
