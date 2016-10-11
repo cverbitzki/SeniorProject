@@ -7,9 +7,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- * Created by cverb on 8/23/2016.
+ * Created by cverb on 10/10/2016.
  */
-public class manageAccounts extends AppCompatActivity {
+public class CreateAccount extends AppCompatActivity {
     private WebView wv3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

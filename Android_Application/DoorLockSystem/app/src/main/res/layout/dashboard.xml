@@ -15,30 +15,13 @@
         android:layout_height="100dp"
         android:text="Door Lock Monitoring System"
         android:id="@+id/ProjectTitle"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:textSize="35dp"
         android:textColor="#ffffff"
         android:textAlignment="center"
         android:textStyle="bold"
-        android:layout_marginBottom="25dp"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:text="Lock App"
-        android:id="@+id/lockApp"
-        android:textColor="#FFFFFF"
-        android:textSize="25dp"
-
-        android:background="@drawable/lock_button"
-        android:shadowColor="#A80000"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="20"
-        android:layout_below="@+id/manageAccounts"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
 
 
     <Button
@@ -55,8 +38,8 @@
         android:shadowDy="0"
         android:shadowRadius="20"
         android:layout_below="@+id/ProjectTitle"
-        android:layout_alignStart="@+id/cameraFeed"
-        android:layout_marginBottom="10dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
 
 
     <Button
@@ -72,9 +55,10 @@
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="20"
+        android:layout_marginRight="0dp"
         android:layout_below="@+id/activityLog"
-        android:layout_alignStart="@+id/lockApp"
-        android:layout_marginBottom="10dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
 
     <Button
         android:layout_width="300dp"
@@ -90,7 +74,7 @@
         android:shadowRadius="20"
         android:layout_below="@+id/cameraFeed"
         android:layout_alignStart="@+id/cameraFeed"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginTop="20dp" />
 
 
 </RelativeLayout>
