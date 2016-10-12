@@ -21,7 +21,7 @@ public class CreateAccount extends AppCompatActivity {
         wv3.getSettings().setLoadsImagesAutomatically(true);
         wv3.getSettings().setJavaScriptEnabled(true);
         wv3.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv3.loadUrl("http://192.168.1.9/passwordAndroid.php");
+        wv3.loadUrl("http://141.114.199.211/passwordAndroid.php");
     }
     private class MyBrowser extends WebViewClient {
         @Override

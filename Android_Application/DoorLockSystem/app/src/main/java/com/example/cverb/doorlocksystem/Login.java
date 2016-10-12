@@ -22,8 +22,8 @@ import java.io.IOException;
  * Created by cverb on 10/9/2016.
  */
 public class Login extends AppCompatActivity {
-    String url = "http://192.168.1.9/accounts";
-    String account;
+    String url = "http://141.114.199.211/accounts";
+    String account = " "; // need account string to have initial value
     ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,18 @@ public class Login extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Execute Title AsyncTask
-                new Title().execute();
+                if (!(editUsername.getText().toString().isEmpty()) && !(editPassword.getText().toString()).isEmpty())
+                {
 
+                    // Execute Title AsyncTask
+                    new Title().execute();
+                }
+                else if ((editUsername.getText().toString().isEmpty()) && (editPassword.getText().toString()).isEmpty())
+                    Toast.makeText(Login.this, "Enter Username and Password", Toast.LENGTH_SHORT).show();
+                else if ((editUsername.getText().toString().isEmpty()))
+                    Toast.makeText(Login.this, "Enter Username", Toast.LENGTH_SHORT).show();
+                else if ((editPassword.getText().toString()).isEmpty())
+                    Toast.makeText(Login.this, "Enter Password", Toast.LENGTH_SHORT).show();
             }
             // Title AsyncTask
             class Title extends AsyncTask<Void, Void, Void> {
@@ -60,6 +69,7 @@ public class Login extends AppCompatActivity {
                     try {
                         // Connect to the web site
                         Document document = Jsoup.connect(url).get();
+                        // need to grab the exact username and password and save to strings like account
                         account = document.html();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -70,13 +80,14 @@ public class Login extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Void result) {
                     mProgressDialog.dismiss();
-                    if(account.contains(editUsername.getText().toString()) && account.contains(editPassword.getText().toString())) {
+                    // need to grab the exact username and password and save to strings like account
+                    if (account.contains(editUsername.getText().toString()) && account.contains(editPassword.getText().toString())) {
                         Toast.makeText(Login.this, "Success", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(getApplicationContext(), Dashboard.class);
                         startActivity(i);
-                    }
-                    else
+                    } else
                         Toast.makeText(Login.this, "Try Again", Toast.LENGTH_SHORT).show();
+
                 }
 
             }
