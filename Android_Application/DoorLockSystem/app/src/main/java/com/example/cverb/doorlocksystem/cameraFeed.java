@@ -27,7 +27,7 @@ import java.io.InputStream;
  * Created by cverb on 8/22/2016.
  */
 public class cameraFeed extends Activity {
-    String url = "http://192.168.1.9/andriodCamera.html";
+    String url = "http://141.114.199.211/andriodCamera.html";
     ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class cameraFeed extends Activity {
         protected Void doInBackground(Void... params) {
             try {
 
-                InputStream input = new java.net.URL("http://192.168.1.9/cam_pic.jpg").openStream();
+                InputStream input = new java.net.URL("http://141.114.199.211/cam_pic.jpg").openStream();
                 // Decode Bitmap
                 bitmap = BitmapFactory.decodeStream(input);
             } catch (IOException e) {
