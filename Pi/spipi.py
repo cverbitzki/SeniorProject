@@ -14,7 +14,7 @@ slave = pi.spi_open(spi_chan, baud, 0)
 
 send = "A"
 recieve = "B"
-
-pi.spi_xfer(slave, send, recieve, 1)
-
-print(recieve)
+while 1:
+	pi.spi_xfer(slave, send, recieve, 1)
+	print(recieve)
+	
