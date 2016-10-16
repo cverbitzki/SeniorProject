@@ -1,4 +1,7 @@
 #!/usr/bin/python
+##	spipi.py
+##	Jordan Millett 
+##	16 OCT 2016	
 import pigpio
 
 spi_chan = 0
@@ -17,4 +20,4 @@ recieve = "B"
 while 1:
 	pi.spi_xfer(slave, send, recieve, 1)
 	print(recieve)
-	
+
