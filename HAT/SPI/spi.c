@@ -25,7 +25,22 @@ uint8_t spi_recieve(void)
 	return SPDR;
 }
 
+void spi_transmit(uint8_t data)
+{
+	SPDR = data;
+}
+
 ISR(SPI_STC_vect)
 {
-	
+	uin8_t data;
+	/* Get data from register 	*/
+	data = spi_recieve(void);
+	/* Add send data	*/
+	spi_transmit(data);
+}
+
+int main(void)
+{
+	spi_slave_init();
+	while(1);
 }
