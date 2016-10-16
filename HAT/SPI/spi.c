@@ -4,6 +4,7 @@
 
 #include <avr/io.h>     // For AVR registers
 #include <avr/interrupt.h>	
+#include <stdint.h>
 
 /* Master - ATMEGA
  * PB4 MISO
@@ -18,10 +19,12 @@ void spi_slave_init(void)
 	DDRB = (1 << PB4);
 	/*	Enable spi and interrupt	*/
 	SPCR = ((1 << SPE) | (1 << SPIE));
+	SPDR = 0;
 }
 
 uint8_t spi_recieve(void)
 {
+	while((SPSR & (1 << SPIF)));
 	return SPDR;
 }
 
@@ -32,15 +35,17 @@ void spi_transmit(uint8_t data)
 
 ISR(SPI_STC_vect)
 {
-	uin8_t data;
+	uint8_t data;
 	/* Get data from register 	*/
-	data = spi_recieve(void);
+	data = spi_recieve();
 	/* Add send data	*/
 	spi_transmit(data);
 }
 
 int main(void)
 {
+
 	spi_slave_init();
+	sei();
 	while(1);
 }
