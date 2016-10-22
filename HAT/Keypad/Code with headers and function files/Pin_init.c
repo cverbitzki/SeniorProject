@@ -1,23 +1,5 @@
 #include "Pin_init.h"
 
-void LED_init(void)
-{
-  /* Set Port B to output 1 which is off */
-  DDRB = 0xFF;
-  PORTB = 0xFF;
-}
-
-void Col_init(void)
-{
-  DDRD = 0xF8;  // Bits 0,1,2 are keypad columns
-  PORTD = 0x07; // Pullups are set for bits 0,1,2
-}
-
-void Row_init(void)
-{
-  DDRD = 0x87;  // Bits 3,4,5,6 are keypad rows
-  PORTD = 0x78; // Pullups are set for bits 3,4,5,6
-}
 
 void pin_init(void)
 {

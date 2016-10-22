@@ -1,4 +1,3 @@
-#include "Pin_init.h"
 #include "Keypad.h"
 
 /*  KEYPAD Coresponding Values dependent on how wiring is setup
@@ -7,6 +6,17 @@
     6 = '7'      5 =  '8'    4 = '9'
     3 = '*'      2 =  '0'    1 = '#'
 */
+void Col_init(void)
+{
+  DDRD = 0xF8;  // Bits 0,1,2 are keypad columns
+  PORTD = 0x07; // Pullups are set for bits 0,1,2
+}
+
+void Row_init(void)
+{
+  DDRD = 0x87;  // Bits 3,4,5,6 are keypad rows
+  PORTD = 0x78; // Pullups are set for bits 3,4,5,6
+}
 
 unsigned char Read_key(void)
 {

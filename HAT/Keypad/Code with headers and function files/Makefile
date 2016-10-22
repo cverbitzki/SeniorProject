@@ -6,13 +6,11 @@ ADFLAGS=-p m88 -c avrispmkII -P usb
 
 .PHONY: fuses prog erase clean
 
-
 prog : $(TARGET).hex $(TARGET).eeprom
 	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i
 
-
 %.obj : %.o
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@ Control_Motor.c Control_LEDS.c Keypad.c Password.c Pin_init.c
 
 %.hex : %.obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@

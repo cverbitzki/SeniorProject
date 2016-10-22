@@ -1,5 +1,7 @@
 // Christopher Verbitzki & Jordan Millett
 // Date: 10/10/2016
+#ifndef PIN_INIT_H
+#define PIN_INIT_H
 #include <avr/io.h>     // For AVR registers
 #include <util/delay.h> // for delay routine
 
@@ -25,3 +27,4 @@ void LED_init(void);
 void Col_init(void);
 void Row_init(void);
 void pin_init(void);
+#endif

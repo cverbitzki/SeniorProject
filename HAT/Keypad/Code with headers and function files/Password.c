@@ -1,7 +1,6 @@
 #include "Pin_init.h"
 #include "Password.h"
 
-
 int check_sequence(char password[], char holder[], char reset[])
 {
   int i = 0 ;

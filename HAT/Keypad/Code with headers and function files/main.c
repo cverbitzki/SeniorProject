@@ -2,7 +2,7 @@
 // Date: 10/10/2016
 #include "Pin_init.h"
 #include "Control_Motor.h"
-#include "Kepad.h"
+#include "Keypad.h"
 #include "Password.h"
 #include "Control_LEDS.h"
 
@@ -57,7 +57,7 @@ int main( void )
                 }
               }
               /* If password not correct check if password change attempted */
-              else if(sequence_code == 1){
+              else if(sequence_code == 3){
                 index = 0;
                 while(index < 4 ){
                   /* Read keypress */
@@ -72,7 +72,7 @@ int main( void )
                 digit_leds_on();
                 index = 0;
                 sequence_code = check_sequence(password,holder,reset);
-                if (sequence_code == 0)    // Could pass index by reference to function line above
+                if (sequence_code == 1)    // Could pass index by reference to function line above
                   index = 4;
                 while(index < 4 ){
                   /* Read keypress */
