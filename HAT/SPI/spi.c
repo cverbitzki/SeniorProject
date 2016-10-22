@@ -32,7 +32,7 @@ void spi_slave_init(void)
 
 uint8_t spi_recieve(void)
 {
-	while((SPSR & (1 << SPIF)));
+	while(!(SPSR & (1 << SPIF)));
 	return SPDR;
 }
 
@@ -44,9 +44,7 @@ void spi_transmit(uint8_t data)
 
 ISR(SPI_STC_vect)
 {
-	char a = 'A';
-	char b = 'B';
-
+	cli();
 	uint8_t data;
 	/* Get data from register 	*/
 	data = spi_recieve();
@@ -71,17 +69,16 @@ ISR(SPI_STC_vect)
 	} else {
 		/* Log transfer	*/
 /*	}
+
 */		
+
 	spi_transmit(data);
-		
-	
-	
-	
+	sei();
 }
 
 int main(void)
 {
-
+	cli();
 	spi_slave_init();
 	sei();
 	while(1);
