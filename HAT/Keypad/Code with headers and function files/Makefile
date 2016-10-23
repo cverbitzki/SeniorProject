@@ -10,7 +10,7 @@ prog : $(TARGET).hex $(TARGET).eeprom
 	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i
 
 %.obj : %.o
-	$(CC) $(CFLAGS) $< -o $@ Control_Motor.c Control_LEDS.c Keypad.c Password.c Pin_init.c
+	$(CC) $(CFLAGS) $< -o $@ Control_Motor.c Control_LEDS.c Keypad.c Password.c Pin_init.c Communication.c
 
 %.hex : %.obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@
