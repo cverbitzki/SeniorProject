@@ -5,6 +5,7 @@
 #include "Keypad.h"
 #include "Password.h"
 #include "Control_LEDS.h"
+#include "Communication.h"
 
 int main( void )
 {
@@ -13,14 +14,43 @@ int main( void )
     int lock_state = 1;       // State of Deadbolt (1 = Locked, 0 = Unlocked)
     int light_state = 0;       // State of Light Bulb (0 = OFF, 1 = ON)
     int i = 0;           // Index for loops
-    int password[4] = {12,11,10,9}; // ***** TEMPORARY DEFINED PASSWORD ********
+    int password[4]; // ***** TEMPORARY DEFINED PASSWORD ********
     int holder[4];                  // Store password user enters
+    int temp[4];                  // For password change verification of password first
     int reset[4] = {2,2,2,2};
     int sequence_code = 0;
+    char eeprom_data[6]={"123410"};
     /* Set Initial State of Pins */
     pin_init();
+    // NEED TO GRAB INITIAL STATE FROM PI AND IF PI IS OFF OUTPUT A DEFUALT STATE
+    write_eeprom_array(0x0, eeprom_data,6); // write eeprom first 6 characters of data
 
     while(1){
+      read_eeprom_array(0x0, eeprom_data,6);
+
+      // Check and Set password
+      for (i = 0; i < 4; i++) {
+        password[i] = keypad_key(eeprom_data[i]);
+      }
+      // Check and Set Lock state
+      if(eeprom_data[4] == '0'){
+        lock_state = 0;
+        output_low(PORTC, LED_RED);  // RED LED indicates unlocked
+      }
+      else if(eeprom_data[4] == '1'){
+        lock_state = 1;
+        output_high(PORTC, LED_RED);  // RED LED indicates locked
+      }
+      // Check and Set Light State
+      if(eeprom_data[5] == '0'){
+        light_state = 0;
+        output_low(PORTB, LIGHT);
+      }
+      else if(eeprom_data[5] == '1'){
+        light_state = 1;
+        output_high(PORTB, LIGHT);
+      }
+
       /* Read keypress */
       if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
           if(holder[index] = Read_key()){  // Locate exact key pressed
@@ -34,61 +64,56 @@ int main( void )
             }else if(holder[index] == 1){  // # pressed so toggle 120 VAC light
               index = -1;
               light_state = !light_state;
-              toggle_light(light_state);
+              eeprom_data[5] = light_state;
+              write_eeprom_array(0x0,eeprom_data,6);
             }
             index++;                        // Move to next password digit entered by user
           }
 
           /* Check after 4 digit sequence has been entered */
           if(index == 4){
-              sequence_code = check_sequence(password, holder, reset);
-              /* Password Correct, Toggle state of door lock */
-              if (sequence_code == 1){                      // Password has been correctly verified
-                // PHASE A (BLACK & GREEN), PHASE B (RED & BLUE)
-                if(lock_state == 1){                   /**** Turn Stepper Motor 90 Degrees (Unlock Door) ****/
-                  unlock_door(15);        // Inputs: Delay, Rotation
-                  output_low(PORTC, LED_RED);  // RED LED indicates unclocked
-                  lock_state = !lock_state;
-                }else if (lock_state == 0){             /**** Turn Stepper Motor Back to start position (Lock Door)****/
-                  /******* NEED TO TURN FURTHER THAN 90 DEGREES and SHORTER DELAY FOR MORE TORQUE WITH 9V BATTERY ******/
-                  lock_door(15);       // Inputs: Delay, Rotation
-                  output_high(PORTC, LED_RED); // RED LED indicates locked
-                  lock_state = !lock_state;  // toggle state of lock variable
-                }
-              }
-              /* If password not correct check if password change attempted */
-              else if(sequence_code == 3){
-                index = 0;
-                while(index < 4 ){
-                  /* Read keypress */
-                  if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
-                      if(holder[index] = Read_key()){  // Locate exact key pressed
-                      index++;
-                      _delay_ms(500);    // Key press debounce
-                    }
-                  }
-                  pass_change_leds(index);
-                }
-                digit_leds_on();
-                index = 0;
-                sequence_code = check_sequence(password,holder,reset);
-                if (sequence_code == 1)    // Could pass index by reference to function line above
-                  index = 4;
-                while(index < 4 ){
-                  /* Read keypress */
-                  if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
-                      if(password[index] = Read_key()){  // Locate exact key pressed
-                      index++;
-                      _delay_ms(500);    // Key press debounce
-                    }
-                  }
-                  pass_change_leds(index);
-                }
-                sequence_code = 0;
-              }
-              /* Reset LEDS to off after lock state toggled */
+            sequence_code = check_sequence(password, holder, reset);
+            /* Password Correct, Toggle state of door lock */
+            if (sequence_code == 1){                      // Password has been correctly verified
+              lock_state = password_correct(sequence_code, lock_state);
+              eeprom_data[4] = lock_state;
+              write_eeprom_array(0x0,eeprom_data,6);
+            }
+            /* Password change attempted */
+            else if(sequence_code == 3){
               index = 0;
-              digit_leds_off();
+              /* User now has to enter correct password to procceed to password changing */
+              while(index < 4 ){
+                /* Read keypress */
+                if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
+                  if(temp[index] = Read_key()){  // Locate exact key pressed
+                    index++;
+                    _delay_ms(500);    // Key press debounce
+                  }
+                }
+                pass_change_leds(index);
+              }
+              digit_leds_on();
+              index = 0;
+              sequence_code = check_sequence(password,temp,reset);
+              if (sequence_code == 1){    // Could pass index by reference to function line above
+                while(index < 4 ){
+                  if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
+                    if(password[index] = Read_key()){  // Locate exact key pressed
+                      index++;
+                      _delay_ms(500);    // Key press debounce
+                    }
+                  }
+                  pass_change_leds(index);
+                }
+                for (i = 0; i < 4; i++)
+                  eeprom_data[i]=software_key(password[i]);
+                write_eeprom_array(0x0, eeprom_data,6); // write eeprom first 6 characters of data
+              }
+              sequence_code = 0;
+            }
+            index = 0;
+            digit_leds_off();
           }
         }
     }
