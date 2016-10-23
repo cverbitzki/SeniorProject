@@ -1,6 +1,6 @@
 #include "Pin_init.h"
 #include "Control_Motor.h"
-
+#include "Communication.h"
 void unlock_door(int rotation)
 {
   int i = 0;
@@ -22,6 +22,7 @@ void unlock_door(int rotation)
     _delay_ms(20);
     output_low(PORTC,STEPPER1);
   }
+  output_low(PORTC, LED_RED);  // RED LED indicates unlocked
 }
 
 void lock_door(int rotation)
@@ -45,4 +46,5 @@ void lock_door(int rotation)
     _delay_ms(20);
     output_low(PORTC,STEPPER4);
   }
+  output_high(PORTC, LED_RED);  // RED LED indicates unlocked
 }
