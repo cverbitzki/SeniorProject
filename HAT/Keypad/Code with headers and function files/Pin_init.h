@@ -4,6 +4,7 @@
 #define PIN_INIT_H
 #include <avr/io.h>     // For AVR registers
 #include <util/delay.h> // for delay routine
+#include <avr/eeprom.h> // For read and write to eeprom
 
 /* Function Constants for setting pins */
 #define set_input(portdir,pin) portdir &= ~(1<<pin)
