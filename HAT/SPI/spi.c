@@ -5,6 +5,10 @@
 #include <avr/io.h>     // For AVR registers
 #include <avr/interrupt.h>	
 #include <stdint.h>
+#include <util/setbaud.h>
+
+#define F_CPU 16000000UL
+#define BAUD 9600
 
 /* Master - ATMEGA
  * PB4 MISO
@@ -18,8 +22,10 @@
 #define light_ctl 1 << 5
 #define enable 1 << 3
 #define disable 2 << 3
+#define output_low(port,pin) port &= ~(1<<pin)
+#define output_high(port,pin) port |= (1<<pin)
+#define set_output(portdir,pin) portdir |= (1<<pin)
 
- 
 
 void spi_slave_init(void)
 {
@@ -48,6 +54,10 @@ ISR(SPI_STC_vect)
 	uint8_t data;
 	/* Get data from register 	*/
 	data = spi_recieve();
+
+
+
+	//uart_putchar(data);
 	/* Checks type flag to see requires response or not		*/
 	/* Init to verify connection	*/
 /*	if (data & init){
@@ -72,7 +82,7 @@ ISR(SPI_STC_vect)
 
 */		
 
-	spi_transmit(data);
+	//spi_transmit(data);
 	sei();
 }
 
@@ -81,5 +91,5 @@ int main(void)
 	cli();
 	spi_slave_init();
 	sei();
-	while(1);
+	for(;;);
 }

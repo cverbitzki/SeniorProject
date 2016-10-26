@@ -1,5 +1,5 @@
 CC=avr-gcc
-CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88
+CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88 -DF_CPU=16000000UL -DBAUD=9600
 OBJ2HEX=avr-objcopy
 TARGET=spi
 ADFLAGS=-p m88 -c avrispmkII -P usb

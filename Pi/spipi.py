@@ -17,7 +17,7 @@ pi.set_mode(23, pigpio.OUTPUT)
 slave = pi.spi_open(spi_chan, baud, 0)
 
 send = "A"
-recieve = ""
+recieve = "Z"
 while 1:
 	(count, recieve) = pi.spi_xfer(slave, send)
 	print(send)
