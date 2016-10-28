@@ -36,6 +36,6 @@ uint8_t *get_pass(void)
 void set_pass(char *pass)
 {	
 	/* Write password to memory 	*/
-	eeprom_write_block((const void*)PASSKEY, (void*)&passcode, 4);
+	eeprom_write_block((const void*)passkey, (void*)&passcode, 4);
 	return 0;
 }

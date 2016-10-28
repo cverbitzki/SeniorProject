@@ -5,7 +5,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "SPI/spi.h"
+#include "inc/spi.h"
 
 int main(void)
 {
@@ -27,21 +27,24 @@ int main(void)
 	spi_slave_init();
 	
 
-
+	return 0;
 }
 
 /* SPI Interrupt routine 	*/
 ISR(SPI_STC_vect)
 {
-	cli();
 	uint8_t data;
+	/* Disable interrupts 	*/
+	cli();
 	/* Get data from register 	*/
 	data = spi_recieve();
 	if (data == (int)'L') {
 		data = (int)'F';
 	}
-	//data = (int)'C';
-	spi_transmit(data);
+	
 
+	/* Transmit byte	*/
+	spi_transmit(data);
+	/* Reenable interrupts 	*/
 	sei();
 }

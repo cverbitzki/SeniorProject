@@ -1,4 +1,4 @@
-/*	triac.h	*/
+/*	spi.h	*/
 /*	Jordan Millett */
 /*	8 OCT 2016	*/
 
@@ -17,4 +17,4 @@ void spi_transmit(
 	uint8_t data
 	);
 
-#endif SPI_H
+#endif
