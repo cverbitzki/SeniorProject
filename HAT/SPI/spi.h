@@ -5,11 +5,11 @@
 #ifndef SPI_H
 #define SPI_H
 
-void spi_init_slave(
+void spi_slave_init(
 	void
 	);
 
-uint8_t pi_recieve(
+uint8_t spi_recieve(
 	void
 	);
 

@@ -1,12 +1,11 @@
+/* Jordan Millett	*/
+/* Oct 28 2016 	*/
+
 #include <avr/eeprom.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <init/hat_init.h>
-#include <Keypad/keypad.h>
 
-uint8_t EEMEM PASSKEY;
-uint8_t EEMEM logcount;
-uint8_t
+#include "SPI/spi.h"
 
 int main(void)
 {
@@ -14,7 +13,7 @@ int main(void)
 	 * Get lock state or set unlocked if none
 	 * Get light state or set off if none
 	 */
-	init (&PASSKEY);
+	
 	/* Set motor to saved position	*/
 	/* Set light to saved postition 	*/
 	/* Wait for either
@@ -23,5 +22,26 @@ int main(void)
 	 */
 	/* Pi starts SPI interrupt	*/
 	/* 	*/
+	
+	/* initialize pins for SPI 	*/
+	spi_slave_init();
+	
 
+
+}
+
+/* SPI Interrupt routine 	*/
+ISR(SPI_STC_vect)
+{
+	cli();
+	uint8_t data;
+	/* Get data from register 	*/
+	data = spi_recieve();
+	if (data == (int)'L') {
+		data = (int)'F';
+	}
+	//data = (int)'C';
+	spi_transmit(data);
+
+	sei();
 }
