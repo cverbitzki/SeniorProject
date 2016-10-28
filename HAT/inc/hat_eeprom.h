@@ -17,4 +17,12 @@ void set_pass(
 	char *pass
 	);
 
+char spi_get_data(
+	);
+
+void spi_write_data(
+	char status
+	);
+
+
 #endif

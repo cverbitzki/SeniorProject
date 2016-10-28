@@ -16,18 +16,20 @@ void spi_slave_init(void)
 	/*	Enable spi and interrupt	*/
 	SPCR = ((1 << SPE) | (1 << SPIE));
 	SPDR = 0;
+	
 	/* Reenable interrupts 	*/
 	sei();
 }
 
-uint8_t spi_recieve(void)
+char spi_recieve(void)
 {
-	while(!(SPSR & (1 << SPIF)));
+//	while(!(SPSR & (1 << SPIF)));
 	return SPDR;
 }
 
-void spi_transmit(uint8_t data)
+void spi_transmit(char data)
 {
 	SPDR = data;
+//	while(!(SPSR & (1 << SPIF)));
 }
 

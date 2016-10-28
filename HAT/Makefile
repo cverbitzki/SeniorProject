@@ -3,17 +3,18 @@ CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88 -DF_CPU=16000000UL -DBAUD=96
 OBJ2HEX=avr-objcopy
 TARGET=main
 
+
 ADFLAGS=-p m88 -c avrispmkII -P usb
 
 .PHONY: fuses prog erase clean
 
 
 prog : $(TARGET).hex $(TARGET).eeprom
-	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i -o SPI/spi
+	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i 
 
 
 %.obj : %.o
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@ inc/spi.c inc/hat_eeprom.c
 
 %.hex : %.obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@
