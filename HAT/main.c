@@ -33,14 +33,10 @@ int main(void)
 	/* set up led pin 	*/
 	set_output(PORTB, 1);
 	set_output(PORTB, 0);
+
 	/* initialize pins for SPI 	*/
-	spi_slave_init();
-	output_low(PORTB, 1);
-	output_low(PORTB, 0);
-	toggle_pin(PORTB, 1);
-	toggle_pin(PORTB, 0);
-	toggle_pin(PORTB, 1);
-	toggle_pin(PORTB, 0);
+	spi_slave_init();;
+
 	output_high(PORTB, 0);
 	while(1) {
 		data = spi_get_data();
@@ -58,22 +54,10 @@ ISR(SPI_STC_vect)
 	char data;
 	/* Disable interrupts 	*/
 	cli();
-
-	data = spi_recieve();
-	spi_write_data(data);
-	
-		
 	/* Get data from register 	*/
-
-	//output_high(PORTD, 3);
-	if (data == 'L') {
-		data = 'F';
-		toggle_pin(PORTB, 1);
-	} else {
-		data = 0;
-	}
-	
-
+	data = spi_recieve();
+	/* Save data to eeprom 	*/
+	spi_write_data(data);
 	/* Transmit byte	*/
 	spi_transmit(data);
 	/* Reenable interrupts 	*/
