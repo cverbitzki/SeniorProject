@@ -4,6 +4,7 @@
 #define F_CPU 16000000UL
 #define BAUD 9600
 
+#include <avr/io.h>
 #include <util/setbaud.h>
 
 void serial_init(void) {

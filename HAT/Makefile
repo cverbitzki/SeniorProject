@@ -14,7 +14,7 @@ prog : $(TARGET).hex $(TARGET).eeprom
 
 
 %.obj : %.o
-	$(CC) $(CFLAGS) $< -o $@ inc/spi.c inc/hat_eeprom.c
+	$(CC) $(CFLAGS) $< -o $@ inc/spi.c inc/hat_eeprom.c inc/serial.c
 
 %.hex : %.obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@
