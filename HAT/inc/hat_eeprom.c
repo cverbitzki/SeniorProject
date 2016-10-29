@@ -16,7 +16,7 @@ uint8_t check_pass(char *pass)
     int i;
 
 	/* Read EEPROM 	*/
-    eeprom_read_block(&passcode, PASSKEY, 4);
+    eeprom_read_block(&passcode, &PASSKEY, 4);
     /* Check against entered pass 	*/
     i = 0;
     while(i - 4) {
@@ -25,33 +25,30 @@ uint8_t check_pass(char *pass)
         } else {
             return 1;
         }
-    }	
+    }
+    return 0;	
 }
 
-uint8_t *get_pass(void)
+/* Reads password and saves to arg  */
+void get_pass(char *pass)
 {
-	/* Buff to load passkey into	*/
-	uint8_t passcode[4];
 	/* Write to eeprom, might need error checking	*/
-    eeprom_read_block(passcode, PASSKEY, 4);
+    eeprom_read_block(&pass, &PASSKEY, 4);
     /* Might be bad pointer usage	*/
-    return passcode;
-
 }
 
 void set_pass(char *pass)
 {	
 	/* Write password to memory 	*/
-	eeprom_write_block(passkey, &pass, 4);
-	return 0;
+	eeprom_write_block(&PASSKEY, pass, 4);
 }
 
 char spi_get_data()
 {
-    return eeprom_read_byte(SPIDAT, status);
+    return eeprom_read_byte(&SPIDAT);
 }
 
 void spi_write_data(char status)
 {
-    eeprom_write_byte(SPIDAT, status);
+    eeprom_write_byte(&SPIDAT, status);
 }
