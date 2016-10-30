@@ -1,4 +1,4 @@
-// Christopher Verbitzki & Jordan Millett
+// Christopher Verbitzki
 // Date: 10/10/2016
 #include "Pin_init.h"
 #include "Control_Motor.h"
@@ -6,7 +6,9 @@
 #include "Password.h"
 #include "Control_LEDS.h"
 #include "Communication.h"
-
+#include "Spi.h"
+#include "RX_TX.h"
+#define toggle_pin(port,pin) port ^= (1<<pin)
 int main( void )
 {
     /* Initialize variables */
@@ -20,13 +22,27 @@ int main( void )
     int reset[4] = {2,2,2,2};
     int sequence_code = 0;
     char eeprom_data[6]={"123410"};
+    uint8_t spi;
+
+    /* RX and TX stufffffff */
+    UART_init();
+    _delay_ms(2000);												//DELAY TO ENSURE COMPLETE INITIALIZATION
+    while(1)
+    {
+      checkWord();
+    }
     /* Set Initial State of Pins */
     pin_init();
     // NEED TO GRAB INITIAL STATE FROM PI AND IF PI IS OFF OUTPUT A DEFUALT STATE
     write_eeprom_array(0x0, eeprom_data,6); // write eeprom first 6 characters of data
 
+
+
     while(1){
+
+
       read_eeprom_array(0x0, eeprom_data,6);
+      //eeprom_read_byte(0x0,spi);
 
       // Check and Set password
       for (i = 0; i < 4; i++) {
@@ -41,7 +57,7 @@ int main( void )
         lock_state = 1;
         output_high(PORTC, LED_RED);  // RED LED indicates locked
       }
-      // Check and Set Light State
+      /* Check and Set Light State
       if(eeprom_data[5] == '0'){
         light_state = 0;
         output_low(PORTB, LIGHT);
@@ -50,6 +66,7 @@ int main( void )
         light_state = 1;
         output_high(PORTB, LIGHT);
       }
+      */
 
       /* Read keypress */
       if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
@@ -64,8 +81,9 @@ int main( void )
             }else if(holder[index] == 1){  // # pressed so toggle 120 VAC light
               index = -1;
               light_state = !light_state;
-              eeprom_data[5] = light_state;
-              write_eeprom_array(0x0,eeprom_data,6);
+            //  eeprom_data[5] = light_state;
+              toggle_light(light_state);
+              //write_eeprom_array(0x0,eeprom_data,6);
             }
             index++;                        // Move to next password digit entered by user
           }
@@ -118,3 +136,31 @@ int main( void )
         }
     }
 }
+
+
+// /* SPI Interrupt routine 	*/
+// ISR(SPI_STC_vect)
+// {
+// 	char data;
+// 	/* Disable interrupts 	*/
+// 	cli();
+//
+// 	data = spi_recieve();
+//
+//
+// 	/* Get data from register 	*/
+//
+// 	//output_high(PORTD, 3);
+// 	if (data == 'L') {
+// 		data = 'F';
+// 		toggle_light(1);
+// 	} else {
+// 		data = 0;
+// 	}
+//
+//
+// 	/* Transmit byte	*/
+// 	spi_transmit(data);
+// 	/* Reenable interrupts 	*/
+// 	sei();
+// }
