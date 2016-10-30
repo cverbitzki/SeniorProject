@@ -1,7 +1,7 @@
 CC=avr-gcc
 CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88
 OBJ2HEX=avr-objcopy
-TARGET=tria
+TARGET=triac
 ADFLAGS=-p m88 -c avrispmkII -P usb
 
 .PHONY: fuses prog erase clean

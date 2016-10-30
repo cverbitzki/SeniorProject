@@ -1,15 +1,15 @@
-/*	triac.h	*/
+/*	spi.h	*/
 /*	Jordan Millett */
 /*	8 OCT 2016	*/
 
 #ifndef SPI_H
 #define SPI_H
 
-void spi_init_slave(
+void spi_slave_init(
 	void
 	);
 
-uint8_t pi_recieve(
+uint8_t spi_recieve(
 	void
 	);
 
@@ -17,4 +17,4 @@ void spi_transmit(
 	uint8_t data
 	);
 
-#endif SPI_H
+#endif

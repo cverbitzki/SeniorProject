@@ -1,18 +1,20 @@
 CC=avr-gcc
-CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88
+CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88 -DF_CPU=16000000UL -DBAUD=9600
 OBJ2HEX=avr-objcopy
-TARGET=spi
+TARGET=main
+
+
 ADFLAGS=-p m88 -c avrispmkII -P usb
 
 .PHONY: fuses prog erase clean
 
 
 prog : $(TARGET).hex $(TARGET).eeprom
-	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i
+	sudo avrdude $(ADFLAGS) -V -U flash:w:$(TARGET).hex:i 
 
 
 %.obj : %.o
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@ inc/spi.c inc/hat_eeprom.c inc/serial.c
 
 %.hex : %.obj
 	$(OBJ2HEX) -R .eeprom -O ihex $< $@
@@ -28,3 +30,4 @@ clean :
 fuses:
 	sudo /usr/local/bin/avrdude $(ADFLAGS) -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m 
 # values from http://www.engbedded.com/fusecalc/
+	
