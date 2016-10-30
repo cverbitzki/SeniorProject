@@ -11,7 +11,7 @@
 #define set_output(portdir,pin) portdir |= (1<<pin)
 
 
-#define F_CPU 16000000UL
+#define F_CPU 8000000UL
 #define T_PORT PORTC
 #define T_PIN PC4
 #include <util/delay.h> // for delay routine
