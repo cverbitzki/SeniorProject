@@ -1,5 +1,5 @@
 CC=avr-gcc
-CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88 -DF_CPU=16000000UL -DBAUD=9600
+CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88
 OBJ2HEX=avr-objcopy
 TARGET=main
 

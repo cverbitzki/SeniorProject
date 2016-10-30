@@ -20,7 +20,6 @@ void spi_slave_init(void)
 	/* Reenable interrupts 	*/
 	sei();
 }
-
 char spi_recieve(void)
 {
 //	while(!(SPSR & (1 << SPIF)));
