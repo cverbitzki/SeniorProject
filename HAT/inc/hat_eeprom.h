@@ -9,8 +9,8 @@ uint8_t check_pass(
 	char *pass
 	);
 
-uint8_t *get_pass(
-	void
+void get_pass(
+	char *pass
 	);
 
 void set_pass(

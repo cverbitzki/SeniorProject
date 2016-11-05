@@ -28,7 +28,6 @@ uint8_t check_pass(char *pass)
     }
     return 0;	
 }
-
 /* Reads password and saves to arg  */
 void get_pass(char *pass)
 {
@@ -36,7 +35,7 @@ void get_pass(char *pass)
     eeprom_read_block(&pass, &PASSKEY, 4);
     /* Might be bad pointer usage	*/
 }
-
+/* Sets the default password    */
 void set_pass(char *pass)
 {	
 	/* Write password to memory 	*/
