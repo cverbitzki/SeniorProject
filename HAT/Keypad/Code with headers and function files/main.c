@@ -21,53 +21,55 @@ int main( void )
     int temp[4];                  // For password change verification of password first
     int reset[4] = {2,2,2,2};
     int sequence_code = 0;
-    char eeprom_data[6]={"123410"};
+    char eeprom_data[6];//={"123410"};
+    char send[6];
+    char tempp;
+    char code[6];
     uint8_t spi;
-
+    int timer = 0;
+    output_high(PORTC, LED_RED);  // RED LED indicates locked
     /* RX and TX stufffffff */
     UART_init();
     _delay_ms(2000);												//DELAY TO ENSURE COMPLETE INITIALIZATION
-    while(1)
-    {
-      checkWord();
-    }
+    output_low(PORTC, LED_RED);  // RED LED indicates locked
     /* Set Initial State of Pins */
     pin_init();
     // NEED TO GRAB INITIAL STATE FROM PI AND IF PI IS OFF OUTPUT A DEFUALT STATE
-    write_eeprom_array(0x0, eeprom_data,6); // write eeprom first 6 characters of data
-
-
+    _delay_ms(2000);
 
     while(1){
+      if(timer >200){ // about 40 seconds is 1000
+        toggle_light(1);
+        timer = 0;
 
+      //Read
+      set_states();
+      code[0] = read_eeprom_word(0x00);
+      code[1] = read_eeprom_word(0x01);
+      code[2] = read_eeprom_word(0x02);
+      code[3] = read_eeprom_word(0x03);
+      code[4] = read_eeprom_word(0x04);
+      code[5] = read_eeprom_word(0x05);
 
-      read_eeprom_array(0x0, eeprom_data,6);
-      //eeprom_read_byte(0x0,spi);
-
-      // Check and Set password
-      for (i = 0; i < 4; i++) {
-        password[i] = keypad_key(eeprom_data[i]);
-      }
       // Check and Set Lock state
-      if(eeprom_data[4] == '0'){
+      if(code[4] == '0'){
         lock_state = 0;
         output_low(PORTC, LED_RED);  // RED LED indicates unlocked
       }
-      else if(eeprom_data[4] == '1'){
+      else if(code[4] == '1'){
         lock_state = 1;
         output_high(PORTC, LED_RED);  // RED LED indicates locked
       }
-      /* Check and Set Light State
-      if(eeprom_data[5] == '0'){
+      //Check and Set Light State
+      if(code[5] == '0'){
         light_state = 0;
-        output_low(PORTB, LIGHT);
+        toggle_light(light_state);
       }
-      else if(eeprom_data[5] == '1'){
+      else if(code[5] == '1'){
         light_state = 1;
-        output_high(PORTB, LIGHT);
+        toggle_light(light_state);
       }
-      */
-
+    }
       /* Read keypress */
       if (!(PIND == 0x07)) {               // Key in column 0,1,2 is pressed returns 0
           if(holder[index] = Read_key()){  // Locate exact key pressed
@@ -134,6 +136,7 @@ int main( void )
             digit_leds_off();
           }
         }
+        timer++;
     }
 }
 

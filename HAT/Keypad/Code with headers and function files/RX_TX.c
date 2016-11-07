@@ -1,6 +1,9 @@
 #include "RX_TX.h"
 #include "Control_LEDS.h"
 #include "Pin_init.h"
+#include "Communication.h"
+#include <avr/io.h>
+#include <avr/eeprom.h>
 
 void UART_init(void)
 {
@@ -13,65 +16,80 @@ void UART_init(void)
 	stdout = &serial_stream;
 }
 
-void checkWord(void)
+void set_states(void)
 {
-	FILE *fp, *fpr;
-	int answer, guess;
-
-	answer=rand()%10000;
-	fp=stdout;
-	fpr=stdin;
-
- fprintf(fp,"Welcome to the high-low guessing game \r\n");
- fprintf(fp,"please enter integer guesses between 0 and 10000\r\n");
-
- guess=answer+1;
- while(guess!=answer)
- {   	while(fscanf(fpr,"%d",&guess)!=1) fscanf(fpr,"%*s");
- if(guess<answer) fprintf(fp,"Too low, try again \r\n");
-		 else if (guess>answer) fprintf(fp,"Too High, try again \r\n");
- else fprintf(fp,"Congratualtions you got it right\r\n");
-
-	}
-
-
-	
 	FILE *in;
 	FILE *out;
-	char word[80];
-	int i;
-
-	in = stdin;
 	out = stdout;
+	char word[20];
 
-  set_output(DDRC, LED_RED);
-  output_high(PORTC, LED_RED);
-	_delay_ms(1000);
-	output_low(PORTC, LED_RED);
-
-	while(1) {
-		for (i = 0; i < 80; i++) {								//MAX LENGTH A WORD CAN BE IS 80 CHARACTERS, RESTART IF LONGER
+	char send[6];
+	in = stdin;
+	int i;
+	//while(1) {
+		for (i = 0; i < 20; i++) {								//MAX LENGTH A WORD CAN BE IS 80 CHARACTERS, RESTART IF LONGER
 			while (fscanf(in, "%c", &word[i]) != 1) {		//WAIT FOR VALID CHARACTER TO RECEIVE
 				fscanf(in, "%*s");
 			}
-			if (i == 80) {												//RESTARTS LOOP IF WORD IS TOO LONG
+			if (i == 21) {												//RESTARTS LOOP IF WORD IS TOO LONG
 				break;
 			}
 			if ((word[i] == ' ') | (word[i] == '.')) {			//WORD IS OVER IF A SPACE OR PERIOD IS RECEIVED
-				if (strncmp(word, "red", 3) == 0) {
-					  output_high(PORTC, LED_RED);
-						//DRIVES PC5 HIGH, TURNING OFF LED
+				write_eeprom_word(0x00,word[0]);
+				write_eeprom_word(0x01,word[1]);
+				write_eeprom_word(0x02,word[2]);
+				write_eeprom_word(0x03,word[3]);
+				write_eeprom_word(0x04,word[4]);
+				write_eeprom_word(0x05,word[5]);
+				// send[0] = read_eeprom_word(0x00);
+				// send[1] = read_eeprom_word(0x01);
+				// send[2] = read_eeprom_word(0x02);
+				// send[3] = read_eeprom_word(0x03);
+				// send[4] = read_eeprom_word(0x04);
+				// send[5] = read_eeprom_word(0x05);
+				//fprintf(out,"%s", send);
+
+				for (i = 0; i < 6; i++) {
+					fprintf(out,"%c", word[i]);
 				}
-				else if (strncmp(word, "yellow", 3) == 0) {
-					  output_low(PORTC, LED_RED);
+				//fprintf(out," ");
+				/*
+				send[0] = read_eeprom_word(0x00);
+				send[1] = read_eeprom_word(0x01);
+				send[2] = read_eeprom_word(0x02);
+				send[3] = read_eeprom_word(0x03);
+				send[4] = read_eeprom_word(0x04);
+				send[5] = read_eeprom_word(0x05);
+		*/
+			/*	fprintf(out,"%s", word);
+				if (word[4] =='1') {
+					output_high(PORTC, LED_RED);
 				}
-				else if (strncmp(word, "green", 3) == 0) {
-					  output_high(PORTC, LED_RED);
-				}
+				else if (word[4] == '0') {
+					output_low(PORTC, LED_RED);
+				}*/
 				break;
 			}
 		}
-	}
+	//}
+	//write_eeprom_array(0x0, word,6);
+}
+
+void send_states(void)
+{
+	FILE *out;
+	out = stdout;
+	char send[6];
+
+	send[0] = read_eeprom_word(0x00);
+	send[1] = read_eeprom_word(0x01);
+	send[2] = read_eeprom_word(0x02);
+	send[3] = read_eeprom_word(0x03);
+	send[4] = read_eeprom_word(0x04);
+	send[5] = read_eeprom_word(0x05);
+
+	fprintf(out,"%s", send);
+
 }
 
 int serial_putchar(char val, FILE *fp)

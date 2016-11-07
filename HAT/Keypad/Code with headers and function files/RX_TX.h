@@ -12,4 +12,6 @@ void UART_init(void);
 char serial_getchar(FILE *);
 int serial_putchar(char, FILE *);
 static FILE serial_stream = FDEV_SETUP_STREAM (serial_putchar, serial_getchar, _FDEV_SETUP_RW);
-void checkWord(void);
+
+void set_states(void);
+void send_states(void);

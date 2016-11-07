@@ -8,7 +8,7 @@ void pin_init(void)
   set_output(DDRC, STEPPER2);
   set_output(DDRC, STEPPER3);
   set_output(DDRC, STEPPER4);
-  set_output(DDRB, LED_KEY1);
+  set_output(DDRB, LED_KEY1);   // Might need to use this pin for spi CE
   set_output(DDRB, LED_KEY2);
   set_output(DDRC, LED_KEY3);
   set_output(DDRB, LED_KEY4);
