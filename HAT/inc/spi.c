@@ -22,7 +22,7 @@ void spi_slave_init(void)
 }
 char spi_recieve(void)
 {
-//	while(!(SPSR & (1 << SPIF)));
+	while(!(SPSR & (1 << SPIF)));
 	return SPDR;
 }
 
