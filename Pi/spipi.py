@@ -21,13 +21,15 @@ fd = open('RPi_stat', 'r+')
 
 send = 'A'
 recieve = 'Z'
-
+print("hello\n")
 while 1:
 	(count, recieve) = pi.spi_xfer(slave, send)
 	time.sleep(1)
 	while (recieve != 'R'):
 		send = "C"
 		(count, recieve) = pi.spi_xfer(slave, send)
+		print("waiting for AVR")
+		print(recieve)
 		time.sleep(1)
 	
 	status = fd.readline()
@@ -38,18 +40,22 @@ while 1:
 		#Wait for avr to send first digit
 		while ~(int(recieve) & 16):
 			(count, recieve) = pi.spi_xfer(slave, send)
+		print(recieve)
 		#First digit of pass
 		status[0] = (recieve & 15)
 		while ~(int(recieve) & 32):
 			(count, recieve) = pi.spi_xfer(slave, send)
+		print(recieve)
 		#Second digit
 		status[1] = (recieve & 15)
 		while ~(int(recieve) & 64):
 			(count, recieve) = pi.spi_xfer(slave, send)
+		print(recieve)
 		#Third Digit
 		status[2] = (recieve & 15)
 		while ~(int(recieve) & 128):
 			(count, recieve) = pi.spi_xfer(slave, send)
+		print(recieve)
 		#Fourth digit
 		status[3] = (recieve & 15)
 
