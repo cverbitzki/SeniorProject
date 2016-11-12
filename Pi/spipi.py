@@ -33,6 +33,7 @@ while 1:
 		time.sleep(1)
 	
 	status = fd.readline()
+	# If the password needs to be retrieved
 	if (status[0:4] == "NULL"):
 		send = "S"
 		(count, recieve) = pi.spi_xfer(slave, send)
@@ -40,29 +41,38 @@ while 1:
 		#Wait for avr to send first digit
 		while ~(int(recieve) & 16):
 			(count, recieve) = pi.spi_xfer(slave, send)
+			time.sleep(1)
 		print(recieve)
 		#First digit of pass
 		status[0] = (recieve & 15)
 		while ~(int(recieve) & 32):
 			(count, recieve) = pi.spi_xfer(slave, send)
+			time.sleep(1)
 		print(recieve)
 		#Second digit
 		status[1] = (recieve & 15)
 		while ~(int(recieve) & 64):
 			(count, recieve) = pi.spi_xfer(slave, send)
+			time.sleep(1)
 		print(recieve)
 		#Third Digit
 		status[2] = (recieve & 15)
 		while ~(int(recieve) & 128):
 			(count, recieve) = pi.spi_xfer(slave, send)
+			time.sleep(1)
 		print(recieve)
 		#Fourth digit
 		status[3] = (recieve & 15)
+	# If the lock should be locked
+#	if (status[4] == 1):
+		#lock door
+#	if (status[4] == 1):
+		#lock door
+#	if (status[4] == 1):
+		#lock door
+#	if (status[4] == 1):
+		#lock door
+
 
 	
 
-
-	print(send)
-	print(recieve)
-	time.sleep(1)
-	send = chr(ord(send) + 1)
