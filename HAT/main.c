@@ -1,8 +1,8 @@
 /* Jordan Millett	*/
 /* Oct 28 2016 	*/
 
-#define F_CPU 16000000
-#define BAUD 38400
+#define F_CPU 8000000
+//#define BAUD 38400
 
 #include <avr/eeprom.h>
 #include <avr/io.h>
@@ -36,17 +36,46 @@
 
 int main(void)
 {
-
+	/* Disable interrupts, sanity check 	*/
+	cli();
 	//char spi_dat;
+	/*char *tempkey;
+	char temppass[4];
+	tempkey = &temppass;
+
+	char *defkey;
+	char passcode[4] = "1234";
+	defkey = &passcode;*/
 	/* Set up spi 	*/
 	spi_slave_init();
+
+	
+
 	/* Transmit ready	*/
 	spi_transmit('R');
 	/* Enable interrupts, just in case	*/
 	//spi_dat = spi_get_data();
+
+
+	
+//	get_pass(tempkey);
+	/* If eeprom has no saved key	*/
+//	if (!tempkey) {
+//			set_pass(defkey);
+//	}
+
+	DDRC = 0xFF;
+	set_output(PORTC, 4);
+	output_high(PORTC, 4);
+	_delay_ms(500);
+
+	output_low(PORTC, 4);
+
 	sei();
     while(1) {
-    	check_spi_status();
+    	
+
+    //	check_spi_status();
 		/* Wait for interrupt 	*/     
     }     
 }
@@ -57,40 +86,22 @@ ISR(SPI_STC_vect)
 	char data;
 	/* Disable interrupts 	*/
 	cli();
-	/* Get data from register 	*/
-	data = spi_recieve();
-	/* If RPi is checking status 	*/
-	if (data == 'C') {
-		spi_transmit('R');
-	/* If RPi wants the pass code	*/
-	} else if (data == 'S') {
-		spi_write_data(1);
-		spi_send_pass();
-	/* If RPi wants the next digit in the code	*/
-	} else if (data == 'N') {
-		spi_send_pass();
-	/* If Rpi wants to unlock the door 	*/
-	} else if (data == 'U') {
-		spi_write_data(1 << 4);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Lock the door 	*/
-	} else if (data == 'L') {
-		spi_write_data(1 << 5);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Shut off the light 	*/
-	} else if (data == 'D') {
-		spi_write_data(1 << 6);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Turn on the light 	*/
-	} else if (data == 'B') {
-		spi_write_data(1 << 7);
-		/* acknowledge 	*/
-		spi_transmit('G');
+	//output_high(PORTC, 4);
+	//_delay_ms(250);
+	//output_low(PORTC, 4);
+	if (SPDR) {
+		SPDR = 'R';
+	} else {
+		SPDR = 'N';
 	}
-
+	/* Get data from register 	*/
+	//data = spi_recieve();
+	/* If RPi is checking status 	*/
+	//if (data == 'C') {
+//		spi_transmit('R');
+	/* If RPi wants the pass code	*/
+//	} 
+	//SPDR = "R";
 	/* Reenable interrupts 	*/
 	sei();
 }
