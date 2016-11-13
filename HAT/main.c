@@ -1,10 +1,15 @@
 /* Jordan Millett	*/
 /* Oct 28 2016 	*/
 
+#define F_CPU 8000000
+//#define BAUD 38400
+
 #include <avr/eeprom.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include "inc/spi.h"
 #include "inc/hat_eeprom.h"
@@ -31,36 +36,48 @@
 
 int main(void)
 {
-	char data;
-	/* set up led pin 	*/
-	set_output(PORTB, 1);
-	set_output(PORTB, 0);
+	/* Disable interrupts, sanity check 	*/
+	cli();
+	//char spi_dat;
+	/*char *tempkey;
+	char temppass[4];
+	tempkey = &temppass;
 
-	/* initialize pins for SPI 	*/
+	char *defkey;
+	char passcode[4] = "1234";
+	defkey = &passcode;*/
+	/* Set up spi 	*/
 	spi_slave_init();
-	serial_init();
 
-	/* check serial 	*/
-	serial_sendbyte();
+	
 
-	/* check output pins 	*/
-	output_high(PORTB, 0);
-	output_low(PORTB, 1);
+	/* Transmit ready	*/
+	spi_transmit('R');
+	/* Enable interrupts, just in case	*/
+	//spi_dat = spi_get_data();
 
 
-	while(1) {
+	
+//	get_pass(tempkey);
+	/* If eeprom has no saved key	*/
+//	if (!tempkey) {
+//			set_pass(defkey);
+//	}
 
-		data = serial_getbyte();
-		spi_transmit(data);
-	/*	data = spi_get_data();
-		if (data == 'U') {
-			spi_transmit('Z');
-			toggle_pin(PORTB, 1);
-			spi_write_data(0);
-		}*/
-	toggle_pin(PORTB, 0);
-	}
-	return 0;
+	DDRC = 0xFF;
+	set_output(PORTC, 4);
+	output_high(PORTC, 4);
+	_delay_ms(500);
+
+	output_low(PORTC, 4);
+
+	sei();
+    while(1) {
+    	
+
+    //	check_spi_status();
+		/* Wait for interrupt 	*/     
+    }     
 }
 
 /* SPI Interrupt routine 	*/
@@ -69,23 +86,22 @@ ISR(SPI_STC_vect)
 	char data;
 	/* Disable interrupts 	*/
 	cli();
-
-	output_high(PORTB, 1);
-	
+	//output_high(PORTC, 4);
+	//_delay_ms(250);
+	//output_low(PORTC, 4);
+	if (SPDR) {
+		SPDR = 'R';
+	} else {
+		SPDR = 'N';
+	}
 	/* Get data from register 	*/
-	data = spi_recieve();
-
-	/* send data over serial 	*/
-	serial_sendbyte(data);
-
-	/* Save data to eeprom 	*/
-	//spi_write_data(data);
-	
-	/* Transmit byte	*/
-	//spi_transmit(data);
-	
-	//output_low(PORTB, 1);
-	
+	//data = spi_recieve();
+	/* If RPi is checking status 	*/
+	//if (data == 'C') {
+//		spi_transmit('R');
+	/* If RPi wants the pass code	*/
+//	} 
+	//SPDR = "R";
 	/* Reenable interrupts 	*/
 	sei();
 }
