@@ -1,6 +1,5 @@
 package com.example.cverb.doorlocksystem;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -22,13 +20,16 @@ import java.io.IOException;
  * Created by cverb on 10/9/2016.
  */
 public class Login extends AppCompatActivity {
-    String url = "http://141.114.199.211/accounts";
-    String account = " "; // need account string to have initial value
+    private static final String TAG = "Account Data";
+    String url;
+    String account; // need account string to have initial value
     ProgressDialog mProgressDialog;
+    Globals ip_address = Globals.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        url = "http://"+ip_address.getIP()+"/accounts";
         Button create_account = (Button) findViewById(R.id.register);
         Button login = (Button) findViewById(R.id.login);
         final EditText editUsername = (EditText) findViewById(R.id.email);
@@ -80,8 +81,12 @@ public class Login extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Void result) {
                     mProgressDialog.dismiss();
+                    String[] arrayOfString = account.split("\\s+");
+                    Log.i(TAG, account);
+                    Log.i(TAG, arrayOfString[3]);
+                    Log.i(TAG, arrayOfString[4]);
                     // need to grab the exact username and password and save to strings like account
-                    if (account.contains(editUsername.getText().toString()) && account.contains(editPassword.getText().toString())) {
+                    if (editUsername.getText().toString().equals(arrayOfString[3]) && editPassword.getText().toString().equals(arrayOfString[4])) {
                         Toast.makeText(Login.this, "Success", Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(getApplicationContext(), Dashboard.class);
                         startActivity(i);
