@@ -1,8 +1,8 @@
 /* Jordan Millett	*/
 /* Oct 28 2016 	*/
 
-#define F_CPU 16000000
-#define BAUD 38400
+#define F_CPU 8000000
+//#define BAUD 38400
 
 #include <avr/eeprom.h>
 #include <avr/io.h>
@@ -20,6 +20,8 @@
 #define toggle_pin(port,pin) port ^= (1<<pin)
 #define set_output(portdir,pin) portdir |= (1<<pin)
 
+uint8_t spi_stat
+
 /* Get old pass key if it exists 	
 	 * Get lock state or set unlocked if none
 	 * Get light state or set off if none
@@ -34,63 +36,45 @@
 	/* Pi starts SPI interrupt	*/
 	/* 	*/
 
+
 int main(void)
 {
-
-	//char spi_dat;
+	/* Disable interrupts, sanity check 	*/
+	cli();
+	/* Clear status flag 	*/
+	spi_stat = 0;
 	/* Set up spi 	*/
 	spi_slave_init();
 	/* Transmit ready	*/
-	spi_transmit('R');
-	/* Enable interrupts, just in case	*/
-	//spi_dat = spi_get_data();
+	spi_transmit('G');
+	/* Light up led on boot 	*/
+	DDRC = 0xFF;
+	set_output(PORTC, 4);
+	output_high(PORTC, 4);
+	_delay_ms(500);
+	output_low(PORTC, 4);
+
+	/* Enable interrupts 	*/
 	sei();
-    while(1) {
-    	check_spi_status();
-		/* Wait for interrupt 	*/     
-    }     
+	/* Wait for interrupt 	*/
+    while(1){
+    	if (spi_stat) {
+    		spi_stat = 0;
+    		check_spi();
+    	}
+    }
+     
 }
 
 /* SPI Interrupt routine 	*/
 ISR(SPI_STC_vect)
 {
 	char data;
-	/* Disable interrupts 	*/
-	cli();
-	/* Get data from register 	*/
-	data = spi_recieve();
-	/* If RPi is checking status 	*/
-	if (data == 'C') {
-		spi_transmit('R');
-	/* If RPi wants the pass code	*/
-	} else if (data == 'S') {
-		spi_write_data(1);
-		spi_send_pass();
-	/* If RPi wants the next digit in the code	*/
-	} else if (data == 'N') {
-		spi_send_pass();
-	/* If Rpi wants to unlock the door 	*/
-	} else if (data == 'U') {
-		spi_write_data(1 << 4);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Lock the door 	*/
-	} else if (data == 'L') {
-		spi_write_data(1 << 5);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Shut off the light 	*/
-	} else if (data == 'D') {
-		spi_write_data(1 << 6);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	/* Turn on the light 	*/
-	} else if (data == 'B') {
-		spi_write_data(1 << 7);
-		/* acknowledge 	*/
-		spi_transmit('G');
-	}
-
-	/* Reenable interrupts 	*/
-	sei();
+	/* Set SPI status flag 	*/
+	spi_stat++;
+	/* Send byte from eeprom, read byte from pi 	*/
+	data = spi_transmit(spi_get_data());
+	/* Save data to eeprom 	*/
+	spi_write_data(data);
+	
 }

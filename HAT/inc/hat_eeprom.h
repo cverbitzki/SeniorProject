@@ -10,19 +10,21 @@ uint8_t check_pass(
 	);
 
 void get_pass(
-	char *pass
+	char *passcode
 	);
 
 void set_pass(
 	char *pass
 	);
-
-char spi_get_data(
+uint8_t spi_get_rx(
 	);
-
-void spi_write_data(
-	char status
+void spi_write_rx(
+	uint8_t status
 	);
-
+uint8_t spi_get_tx(
+	);
+void spi_write_tx(
+	uint8_t status
+	);
 
 #endif

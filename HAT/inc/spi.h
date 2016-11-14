@@ -8,17 +8,11 @@
 void spi_slave_init(
 	void
 	);
-uint8_t spi_recieve(
-	void
-	);
-void spi_transmit(
+
+uint8_t spi_transmit(
 	uint8_t data
 	);
-void check_spi_status(
+void check_spi(
 	void
 	);
-void spi_send_pass(
-	void
-	);
-
 #endif
