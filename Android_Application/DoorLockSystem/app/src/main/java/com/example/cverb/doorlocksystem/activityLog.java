@@ -51,8 +51,9 @@ public class activityLog extends AppCompatActivity {
     public static String currentContent;
     final activityLog ma = this;
     // URL Address
-    String url = "http://141.114.199.211/getLogAndroid.php";
-    String url2 = "http://141.114.199.211/getState.ph";
+    Globals ip_address = Globals.getInstance();
+    String url = "http://"+ip_address.getIP()+"/logAndroid.html";
+    String url2 = "http://"+ip_address.getIP()+"/logAndroidTable.html";
 
     ProgressDialog mProgressDialog;
     String title2;
@@ -69,14 +70,14 @@ public class activityLog extends AppCompatActivity {
         wv1.getSettings().setLoadsImagesAutomatically(true);
         wv1.getSettings().setJavaScriptEnabled(true);
         wv1.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv1.loadUrl("http://141.114.199.211/logAndroid.html");
+        wv1.loadUrl(url);
 
         wv2=(WebView)findViewById(R.id.activityLog);
         wv2.setWebViewClient(new MyBrowser());
         wv2.getSettings().setLoadsImagesAutomatically(true);
         wv2.getSettings().setJavaScriptEnabled(true);
         wv2.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wv2.loadUrl("http://141.114.199.211/logAndroidTable.html");
+        wv2.loadUrl(url2);
 
     }
 

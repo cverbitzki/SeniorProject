@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Activity Log</title>
+
+	<link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
+	
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+	<style>
+	.body-content {
+		margin-top:0px;
+	}
+	</style>
+</head>
+<body>
+
+
+<div class = "container body-content text-center">
+	<div class = "row">
+		<div class = "btn-group col-xs-14 col-xs-offset-14">
+			<button class = "btn btn-default col-xs-14" id="btnpicture">Take Picture</button>
+			<big>   Camera  <strong id="CameraLabel" class="text-warning"> . . . .</strong>
+			<button class = "btn btn-default col-xs-14" id="btnLock">Light On</button>
+			<button class = "btn btn-default col-xs-14" id ="btnUnlock">Light Off</button>
+			<big>   Light is <strong id="StatusLabel" class="text-warning"> . . . .</strong>
+		</div>
+
+	</div>
+
+	
+<script>
+var myVar = setInterval(function(){ GetStatus() }, 1000);
+
+</script>
+
+ 
+
+<script type="text/javascript">
+
+function GetStatus()
+{
+ var State = 0;
+ //request alarm status from server
+ $.ajax({
+        url:'getLightState.php',
+        type:'get',
+        success: function (response) {
+            SetStatusLabel(response);
+        },
+//       error: function () {
+      //if you were really fancy here, you'd use toastr.js
+//         alert("An unhandled exception occurred.");
+//       }
+ });
+
+
+ //request alarm status from server
+ $.ajax({
+        url:'getCameraState.php',
+        type:'get',
+        success: function (response) {
+            SetStatusLabel2(response);
+        },
+//       error: function () {
+      //if you were really fancy here, you'd use toastr.js
+//         alert("An unhandled exception occurred.");
+//       }
+ });
+
+}
+
+
+// alarmState: 0 - Disarmed, 1 - Armed, 2 - Tripped
+function SetStatusLabel(State)
+{
+
+ switch(State)
+ {
+  case "0":
+   //make the button look depressed
+   $("#btnUnlock").addClass("active");
+   $("#btnLock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-warning");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("Off");
+   $("#StatusLabel").addClass("text-success");
+   break;
+
+  case "1":
+   //make the button look depressed
+   $("#btnLock").addClass("active");
+   $("#btnUnlock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-success");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("On");
+   $("#StatusLabel").addClass("text-warning");
+   break;
+
+ }
+}
+
+function SetStatusLabel2(State)
+{
+
+ switch(State)
+ {
+  case "0":
+   //make the button look depressed
+   $("#btnpicture").removeClass("active");
+
+   //update status label
+   $("#CameraLabel").removeClass("text-warning");
+   $("#CameraLabel").removeClass("text-danger");
+   $("#CameraLabel").html("Off");
+   $("#CameraLabel").addClass("text-success");
+   break;
+
+  case "1":
+   //make the button look depressed
+   $("#btnpicture").addClass("active");
+
+   //update status label
+   $("#CameraLabel").removeClass("text-success");
+   $("#CameraLabel").removeClass("text-danger");
+   $("#CameraLabel").html("On");
+   $("#CameraLabel").addClass("text-warning");
+   break;
+
+ }
+}
+
+$(document).ready(function() {
+ $("#btnLock").click(function() {
+  //post to server to update alarm status
+ $.ajax({
+        url:'setLightState.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnLock").addClass("active");
+    $("#btnUnlock").removeClass("active");
+
+    //update status label
+    $("#StatusLabel").removeClass("text-success");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("On");
+    $("#StatusLabel").addClass("text-warning");
+    },
+ //      error: function () {
+       //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //      }
+  });
+
+ });
+
+ $("#btnUnlock").click(function() {
+  //post to server to update alarm status
+    $.ajax({
+        url:'setLightState.php',
+        type: 'post',
+        data: {"unarmed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnUnlock").addClass("active");
+    $("#btnLock").removeClass("active");
+    //update status label
+    $("#StatusLabel").removeClass("text-warning");
+    $("#StatusLabel").removeClass("text-danger");
+    $("#StatusLabel").html("Off");
+    $("#StatusLabel").addClass("text-success");
+        },
+ //       error: function () {
+        //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //       }
+  });
+
+ });
+  $("#btnpicture").click(function() {
+    $("#btnpicture").addClass("active");
+
+  //post to server to update alarm status
+    $.ajax({
+        url:'setCameraState.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnpicture").removeClass("active");
+        },
+ //       error: function () {
+        //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //       }
+  });
+
+ });
+
+});
+
+</script>
+</body>
+</html>
+
