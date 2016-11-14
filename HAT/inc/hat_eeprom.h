@@ -10,7 +10,7 @@ uint8_t check_pass(
 	);
 
 void get_pass(
-	char *pass
+	char *passcode
 	);
 
 void set_pass(

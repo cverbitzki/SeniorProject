@@ -26,6 +26,6 @@ clean :
 	rm -f *.hex *.obj *.o
 
 fuses:
-	sudo /usr/local/bin/avrdude $(ADFLAGS) -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m 
+	/bin/avrdude $(ADFLAGS) -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m 
 # values from http://www.engbedded.com/fusecalc/
 	

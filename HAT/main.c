@@ -52,7 +52,7 @@ int main(void)
 	
 
 	/* Transmit ready	*/
-	spi_transmit('R');
+	spi_transmit('G');
 	/* Enable interrupts, just in case	*/
 	//spi_dat = spi_get_data();
 
@@ -70,13 +70,11 @@ int main(void)
 	_delay_ms(500);
 
 	output_low(PORTC, 4);
-
+	//spi_write_data(0x69);
 	sei();
+	/* Wait for interrupt 	*/
     while(1) {
-    	
-
-    //	check_spi_status();
-		/* Wait for interrupt 	*/     
+    //	check_spi();  
     }     
 }
 
@@ -84,24 +82,11 @@ int main(void)
 ISR(SPI_STC_vect)
 {
 	char data;
-	/* Disable interrupts 	*/
-	cli();
-	//output_high(PORTC, 4);
-	//_delay_ms(250);
-	//output_low(PORTC, 4);
-	if (SPDR) {
-		SPDR = 'R';
-	} else {
-		SPDR = 'N';
-	}
+
 	/* Get data from register 	*/
-	//data = spi_recieve();
-	/* If RPi is checking status 	*/
-	//if (data == 'C') {
-//		spi_transmit('R');
-	/* If RPi wants the pass code	*/
-//	} 
-	//SPDR = "R";
-	/* Reenable interrupts 	*/
-	sei();
+	data = spi_transmit(spi_get_data());
+	//output_high(PORTC, 4);
+	/* Save data to eeprom 	*/
+	spi_write_data(data);
+	
 }
