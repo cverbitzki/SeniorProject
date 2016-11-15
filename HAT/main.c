@@ -20,6 +20,8 @@
 #define toggle_pin(port,pin) port ^= (1<<pin)
 #define set_output(portdir,pin) portdir |= (1<<pin)
 
+//uint8_t spi_stat
+
 /* Get old pass key if it exists 	
 	 * Get lock state or set unlocked if none
 	 * Get light state or set off if none
@@ -34,74 +36,54 @@
 	/* Pi starts SPI interrupt	*/
 	/* 	*/
 
+
 int main(void)
 {
 	/* Disable interrupts, sanity check 	*/
 	cli();
-	//char spi_dat;
-	/*char *tempkey;
-	char temppass[4];
-	tempkey = &temppass;
-
-	char *defkey;
-	char passcode[4] = "1234";
-	defkey = &passcode;*/
+	char data;
+	char pass[4] = { 1, 2, 3, 4};
+	/* Clear status flag 	*/
+//	spi_stat = 0;
 	/* Set up spi 	*/
 	spi_slave_init();
-
-	
-
+	set_pass(pass);
 	/* Transmit ready	*/
-	spi_transmit('R');
-	/* Enable interrupts, just in case	*/
-	//spi_dat = spi_get_data();
-
-
-	
-//	get_pass(tempkey);
-	/* If eeprom has no saved key	*/
-//	if (!tempkey) {
-//			set_pass(defkey);
-//	}
-
+	//SPDR = 0xB6;
+	/* Light up led on boot 	*/
 	DDRC = 0xFF;
 	set_output(PORTC, 4);
 	output_high(PORTC, 4);
 	_delay_ms(500);
-
 	output_low(PORTC, 4);
-
+	spi_write_rx(0);
+	/* Enable interrupts 	*/
 	sei();
+	/* Wait for interrupt 	*/
     while(1) {
-    	
-
-    //	check_spi_status();
-		/* Wait for interrupt 	*/     
-    }     
+    	//if (spi_stat) {
+    	//	spi_stat = 0;
+    	data = spi_get_rx();
+    	if(data == 'L') {
+    		output_high(PORTC, 4);
+    	} else if(data == 'U') {
+    		output_low(PORTC, 4);
+    	} else if(data == '')
+    	//	check_spi();
+    }
+    
+     
 }
 
 /* SPI Interrupt routine 	*/
 ISR(SPI_STC_vect)
 {
 	char data;
-	/* Disable interrupts 	*/
-	cli();
-	//output_high(PORTC, 4);
-	//_delay_ms(250);
-	//output_low(PORTC, 4);
-	if (SPDR) {
-		SPDR = 'R';
-	} else {
-		SPDR = 'N';
-	}
-	/* Get data from register 	*/
-	//data = spi_recieve();
-	/* If RPi is checking status 	*/
-	//if (data == 'C') {
-//		spi_transmit('R');
-	/* If RPi wants the pass code	*/
-//	} 
-	//SPDR = "R";
-	/* Reenable interrupts 	*/
-	sei();
+	/* Set SPI status flag 	*/
+	//spi_stat++;
+	/* Send byte from eeprom, read byte from pi 	*/
+	data = spi_transmit(spi_get_rx());
+	/* Save data to eeprom 	*/
+	spi_write_tx(data);
+	
 }
