@@ -5,6 +5,7 @@
 #include <avr/eeprom.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "hat_eeprom.h"
 
 uint8_t EEMEM P_KEY_1;
 uint8_t EEMEM P_KEY_2;
@@ -52,24 +53,28 @@ void get_pass(char *passcode)
 void set_pass(char *pass)
 {	
 	/* Write password to memory 	*/
-	eeprom_write_block(&PASSKEY, pass, 4);
+	eeprom_write_byte(&P_KEY_1, pass[0]);
+    eeprom_write_byte(&P_KEY_2, pass[1]);
+    eeprom_write_byte(&P_KEY_3, pass[2]);
+    eeprom_write_byte(&P_KEY_4, pass[3]);
 }
-
-char spi_get_rx()
+/* read recieved byte   */
+uint8_t spi_get_rx()
 {
     return eeprom_read_byte(&SPI_RX);
 }
-
-void spi_write_rx(char status)
+/* Save byte from Pi    */
+void spi_write_rx(uint8_t status)
 {
     eeprom_write_byte(&SPI_RX, status);
 }
-char spi_get_tx()
+/* Read byte to send */
+uint8_t spi_get_tx()
 {
     return eeprom_read_byte(&SPI_TX);
 }
-
-void spi_write_tx(char status)
+/* Save byte to send   */
+void spi_write_tx(uint8_t status)
 {
     eeprom_write_byte(&SPI_TX, status);
 }
