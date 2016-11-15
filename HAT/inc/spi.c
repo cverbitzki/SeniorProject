@@ -41,11 +41,12 @@ char spi_transmit(char data)
 
 void check_spi(void)
 {
-	uint8_t data = spi_get_data();
-	if (data == 228) {
-		output_high(PORTC, 4);
+	uint8_t data = spi_get_rx();
+	if (data == T_PASS1) {
+		spi_write_tx(0xFF);
 	} else { 
-		output_low(PORTC, 4);
+		/* Echo */
+		spi_write_tx(data);
 	}
 
 }
