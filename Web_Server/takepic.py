@@ -1,13 +1,35 @@
 import picamera
 import time
+import os
 camera = picamera.PiCamera()
 camera.vflip = True
-camera.resolution = (1600,720)
+camera.resolution = (630,291)
+
+
 while True:
-	camera.capture('cam_pic.jpg')
-	time.sleep(1)
+	f = open('camera_state', 'r')
+	state = f.readline()
+	f.close()
+	if state is None:
+		f = open('camera_state', 'w')
+                print "Null Value Detected !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+                f.write('0')
+                f.close()
+	if state == '1':
+		time.sleep(1)
+                f = open('camera_state', 'w')
+                camera.capture('cam_pic.jpg')
+		camera.hflip = True
+		camera.resolution = (1600,900)
+		camera.capture('cam_site.jpg')
+		camera.resolution = (630,291)
+		camera.hflip = False
+                print "Picture Taken !!!!"
+                #os.system("sudo cp cam.jpg cam_pic.jpg")
+		f.write('0')
+                f.close()
 
-
+#	time.sleep(1)
 
 '''
 camera.hflip = True
