@@ -1,4 +1,4 @@
-// Christopher Verbitzki & Jordan Millett
+// Christopher Verbitzki
 // Date: 10/10/2016
 #ifndef KEYPAD_H
 #define KEYPAD_H
