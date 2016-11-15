@@ -27,43 +27,144 @@
                         <form height = "100" align="center" action = "log.html">
                                 <input style ="height:40px; width:300px; font-size:25px" type="submit" value="Activity Log" />
                         </form>
-
                 </ul>
 
 	</div>
 </nav>
 
-<br><br><br>
-<div class = "container body-content text-center">
-	<div class = "row">
-		<div class = "btn-group col-xs-4 col-xs-offset-4">
-			<button class = "btn btn-default col-xs-6" id="btnOn" onclick="pic1()">Camera ON</button>
-			<button class = "btn btn-default col-xs-6" id ="btnOff" onclick="pic2()">Camera OFF</button>
-		</div>
-		<div class="col-xs-12">
-			<small>The Camera is currently <strong id="StatusLabel" class="text-warning">OFF</strong>
-			</small>
-		</div>
-	</div>
-<br/>
-<img id="img" src="" width="700" height="525"/>
+<br><br>
 
+<div class = "container body-content text-center">
+        <div class = "row">
+                <div class = "btn-group col-xs-14 col-xs-offset-14">
+                        <button class = "btn btn-default col-xs-14" id="btnpicture">Take Picture</button>
+                        <big>   Camera  <strong id="CameraLabel" class="text-warning"> . . . .</strong>
+                        <button class = "btn btn-default col-xs-14" id="btnLock">Light On</button>
+                        <button class = "btn btn-default col-xs-14" id ="btnUnlock">Light Off</button>
+                        <big>   Light is <strong id="StatusLabel" class="text-warning"> . . . .</strong>
+                </div>
+
+        </div>
+</div>
+
+<center>
+<button id="image-refresh"><img src="cam_site.jpg"  align="middle" width="1000" height="500" onClick="history.go()"></button>
+</center>
+
+
+<script>
+var myVar = setInterval(function(){ GetStatus() }, 1000);
+
+</script>
 <script type="text/javascript">
-pic2();
+
+//pic1();
+function GetStatus()
+{
+ var State = 0;
+ //request alarm status from server
+ $.ajax({
+        url:'getLightState.php',
+        type:'get',
+        success: function (response) {
+            SetStatusLabel(response);
+        },
+//       error: function () {
+      //if you were really fancy here, you'd use toastr.js
+//         alert("An unhandled exception occurred.");
+//       }
+ });
+
+
+ //request alarm status from server
+ $.ajax({
+        url:'getCameraState.php',
+        type:'get',
+        success: function (response) {
+            SetStatusLabel2(response);
+        },
+//       error: function () {
+      //if you were really fancy here, you'd use toastr.js
+//         alert("An unhandled exception occurred.");
+//       }
+ });
+
+}
+
+// alarmState: 0 - Disarmed, 1 - Armed, 2 - Tripped
+function SetStatusLabel(State)
+{
+
+ switch(State)
+ {
+  case "0":
+   //make the button look depressed
+   $("#btnUnlock").addClass("active");
+   $("#btnLock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-warning");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("Off");
+   $("#StatusLabel").addClass("text-success");
+   break;
+
+  case "1":
+   //make the button look depressed
+   $("#btnLock").addClass("active");
+   $("#btnUnlock").removeClass("active");
+
+   //update status label
+   $("#StatusLabel").removeClass("text-success");
+   $("#StatusLabel").removeClass("text-danger");
+   $("#StatusLabel").html("On");
+   $("#StatusLabel").addClass("text-warning");
+   break;
+
+ }
+}
+
+function SetStatusLabel2(State)
+{
+
+ switch(State)
+ {
+  case "0":
+   //make the button look depressed
+   $("#btnpicture").removeClass("active");
+
+   //update status label
+   $("#CameraLabel").removeClass("text-warning");
+   $("#CameraLabel").removeClass("text-danger");
+   $("#CameraLabel").html("Off");
+   $("#CameraLabel").addClass("text-success");
+   break;
+
+  case "1":
+   //make the button look depressed
+   $("#btnpicture").addClass("active");
+
+   //update status label
+   $("#CameraLabel").removeClass("text-success");
+   $("#CameraLabel").removeClass("text-danger");
+   $("#CameraLabel").html("On");
+   $("#CameraLabel").addClass("text-warning");
+   break;
+
+ }
+}
 
 $(document).ready(function() {
- $("#btnOn").click(function() {
+ $("#btnLock").click(function() {
   //post to server to update alarm status
-  pic1();
-
  $.ajax({
-//        url:'setState.php',
+        url:'setLightState.php',
         type: 'post',
         data: {"armed":"1"},
-        complete: function () {
+        complete: function (response) {
     //make the button look depressed
-    $("#btnOn").addClass("active");
-    $("#btnOff").removeClass("active");
+    $("#btnLock").addClass("active");
+    $("#btnUnlock").removeClass("active");
 
     //update status label
     $("#StatusLabel").removeClass("text-success");
@@ -71,52 +172,68 @@ $(document).ready(function() {
     $("#StatusLabel").html("On");
     $("#StatusLabel").addClass("text-warning");
     },
-       error: function () {
-                                                               //if you were really fancy here, you'd use toastr.js
-          alert("An unhandled exception occurred. Please refresh the page and try again.");
-       }
+ //      error: function () {
+       //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //      }
   });
-
 
  });
 
- $("#btnOff").click(function() {
+ $("#btnUnlock").click(function() {
   //post to server to update alarm status
-  pic2();
-  $.ajax({
-//        url:'setState.php',
+    $.ajax({
+        url:'setLightState.php',
         type: 'post',
-        data: {"armed":"0"},
-        complete: function () {
+        data: {"unarmed":"1"},
+        complete: function (response) {
     //make the button look depressed
-    $("#btnOff").addClass("active");
-    $("#btnOn").removeClass("active");
+    $("#btnUnlock").addClass("active");
+    $("#btnLock").removeClass("active");
     //update status label
     $("#StatusLabel").removeClass("text-warning");
     $("#StatusLabel").removeClass("text-danger");
     $("#StatusLabel").html("Off");
     $("#StatusLabel").addClass("text-success");
         },
-        error: function () {
+ //       error: function () {
         //if you were really fancy here, you'd use toastr.js
-          alert("An unhandled exception occurred. Please refresh the page and try again.");
-        }
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //       }
   });
+
+ });
+  $("#btnpicture").click(function() {
+    $("#btnpicture").addClass("active");
+
+  //post to server to update alarm status
+    $.ajax({
+        url:'setCameraState.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function (response) {
+    //make the button look depressed
+    $("#btnpicture").removeClass("active");
+        },
+ //       error: function () {
+        //if you were really fancy here, you'd use toastr.js
+ //         alert("An unhandled exception occurred. Please refresh the page and try again.");
+ //       }
+  });
+
 
  });
 
 });
-        function pic1()
-        {
-            document.getElementById("img").src = "cam_pic.jpg";
-        }
-        function pic2()
-        {
-            document.getElementById("img").src ="cam_off.jpg";
-        } </script>
 
-
-
+//        function pic1()
+//        {
+//            document.getElementById("img").src = "cam_site.jpg";
+//        }
+//        function pic2()
+//        {
+//            document.getElementById("img").src ="cam_off.jpg";
+//        } </script>
 
 
 
