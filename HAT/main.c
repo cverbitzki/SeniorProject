@@ -20,7 +20,7 @@
 #define toggle_pin(port,pin) port ^= (1<<pin)
 #define set_output(portdir,pin) portdir |= (1<<pin)
 
-uint8_t spi_stat
+//uint8_t spi_stat
 
 /* Get old pass key if it exists 	
 	 * Get lock state or set unlocked if none
@@ -41,28 +41,37 @@ int main(void)
 {
 	/* Disable interrupts, sanity check 	*/
 	cli();
+	char data;
+	char pass[4] = { 1, 2, 3, 4};
 	/* Clear status flag 	*/
-	spi_stat = 0;
+//	spi_stat = 0;
 	/* Set up spi 	*/
 	spi_slave_init();
+	set_pass(pass);
 	/* Transmit ready	*/
-	spi_transmit('G');
+	//SPDR = 0xB6;
 	/* Light up led on boot 	*/
 	DDRC = 0xFF;
 	set_output(PORTC, 4);
 	output_high(PORTC, 4);
 	_delay_ms(500);
 	output_low(PORTC, 4);
-
+	spi_write_rx(0);
 	/* Enable interrupts 	*/
 	sei();
 	/* Wait for interrupt 	*/
-    while(1){
-    	if (spi_stat) {
-    		spi_stat = 0;
-    		check_spi();
-    	}
+    while(1) {
+    	//if (spi_stat) {
+    	//	spi_stat = 0;
+    	data = spi_get_rx();
+    	if(data == 'L') {
+    		output_high(PORTC, 4);
+    	} else if(data == 'U') {
+    		output_low(PORTC, 4);
+    	} else if(data == '')
+    	//	check_spi();
     }
+    
      
 }
 
@@ -71,10 +80,10 @@ ISR(SPI_STC_vect)
 {
 	char data;
 	/* Set SPI status flag 	*/
-	spi_stat++;
+	//spi_stat++;
 	/* Send byte from eeprom, read byte from pi 	*/
-	data = spi_transmit(spi_get_data());
+	data = spi_transmit(spi_get_rx());
 	/* Save data to eeprom 	*/
-	spi_write_data(data);
+	spi_write_tx(data);
 	
 }
