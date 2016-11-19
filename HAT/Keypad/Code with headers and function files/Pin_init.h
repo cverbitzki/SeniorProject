@@ -2,6 +2,7 @@
 // Date: 10/10/2016
 #ifndef PIN_INIT_H
 #define PIN_INIT_H
+
 #include <avr/io.h>     // For AVR registers
 #include <util/delay.h> // for delay routine
 #include <avr/eeprom.h> // For read and write to eeprom
@@ -17,12 +18,12 @@
 #define LED_KEY2 PC0          // ADC for motor position control
 #define LED_KEY3 PB6
 #define LED_KEY4 PB7
-#define LED_RED PB0
+#define LED_RED PB1
 #define STEPPER1 PC5
 #define STEPPER2 PC4
 #define STEPPER3 PC3
 #define STEPPER4 PC2
-#define LIGHT PB1
+#define LIGHT PB0
 
 void LED_init(void);
 void Col_init(void);

@@ -1,5 +1,14 @@
 // Christopher Verbitzki
 // Date: 10/10/2016
+
+#define F_CPU 8000000
+#include <avr/eeprom.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdint.h>
+#include <stdio.h>
+
 #include "Pin_init.h"
 #include "Control_Motor.h"
 #include "Keypad.h"
@@ -8,9 +17,15 @@
 #include "Communication.h"
 #include "Spi.h"
 #include "RX_TX.h"
+#include "hat_eeprom.h"
+
+
+
 
 int main( void )
 {
+    /* Disable interrupts, sanity check 	*/
+    ///////////////cli();
     /* Initialize variables */
     int index = 0;       // Index of password user enters
     int lock_state = 1;       // State of Deadbolt (1 = Locked, 0 = Unlocked)
@@ -22,18 +37,73 @@ int main( void )
     int temp[4];                  // For password change verification of password first
     int reset[4] = {3,3,3,3};
     int sequence_code = 0;
-    int password_change_timer = 300;   // 20 second delay to change password
+    int password_change_timer = 2500;   // 20 second delay to change password
     //char eeprom_data[6]={"123411"};
     char code[6];
     int timer = 0;
 
 
-    pin_init();
+    //SPI variables
+    char data;
 
+    // /* Set up spi 	*/
+  	spi_slave_init();
+    // /* Enable interrupts 	*/
+  	sei();
+    // Initialize other pins
+    pin_init();
     // Probably should check lock state here instead of setting led high !!!!!!!!!!!
     output_high(PORTB, LED_RED);  // RED LED indicates locked
-
+    // _delay_ms(2000);
+    // output_low(PORTB, LED_RED);
+    //lock_one_phase();
 while(1){
+
+    	data = spi_get_rx();
+    	if(data == 'L' && lock_state == 0) {         // Lock door
+        lock_state = 1;
+        lock_door(15);
+    		//output_high(PORTB, LED_RED);  // RED LED indicates locked
+    		spi_write_tx('K');      // Check
+        spi_write_rx(0);
+    	} else if(data == 'U' && lock_state == 1) {  // Unlock door
+        lock_state = 0;
+        unlock_door(15);
+    		//output_low(PORTB, LED_RED);  // RED LED indicates locked
+    		spi_write_tx('K');      // Check
+    		spi_write_rx(0);
+    	} else if(data == 'C') {  // Unlock door
+        if(lock_state == 1){
+          spi_write_tx('L');      // Check
+          spi_write_rx(0);
+        }else if (lock_state == 0){
+          spi_write_tx('U');      // Check
+          spi_write_rx(0);
+        }
+    	}
+
+      else if(data == 'B' && light_state ==0) {         // Turn on light
+        light_state = 1;
+        toggle_light(light_state);
+        // TURNONLIGHT
+    		spi_write_tx('K');      // Check
+        spi_write_rx(0);
+    	} else if(data == 'D' && light_state ==1) {  // Turn off light
+        light_state = 0;
+        toggle_light(light_state);
+        //TURNOFFLIGHT
+    		spi_write_tx('K');      // Check
+    		spi_write_rx(0);
+    	} else if(data == 'T') {  // Check light status
+        if(light_state == 1){
+          spi_write_tx('B');      // Check
+          spi_write_rx(0);
+        }else if (light_state == 0){
+          spi_write_tx('D');      // Check
+          spi_write_rx(0);
+        }
+    	}
+
   /* Read keypress */
   if (!(PIND == 0x0F)) {               // Key in column 0,1,2,3 is pressed returns 0
       if(holder[index] = Read_key()){  // Locate exact key pressed
@@ -122,5 +192,20 @@ while(1){
           digit_leds_off();
       }
     }
+  }
 }
+
+
+
+/* SPI Interrupt routine 	*/
+ISR(SPI_STC_vect)
+{
+	char data;
+	/* Set SPI status flag 	*/
+	//spi_stat++;
+	/* Send byte from eeprom, read byte from pi 	*/
+	data = spi_transmit(spi_get_tx());
+	/* Save data to eeprom 	*/
+	spi_write_rx(data);
+
 }

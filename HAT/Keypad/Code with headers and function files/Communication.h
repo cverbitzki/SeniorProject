@@ -1,6 +1,8 @@
+
 #include <avr/io.h>     // For AVR registers
 #include <util/delay.h> // for delay routine
 #include <avr/eeprom.h> // for read/writing to eeprom
+
 #define write_eeprom_array(address,value_p,length) eeprom_write_block ((const void *)value_p, (void *)address, length)
 #define read_eeprom_array(address,value_p,length) eeprom_read_block ((void *)value_p, (const void *)address, length)
 

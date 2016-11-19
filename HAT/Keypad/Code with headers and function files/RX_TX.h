@@ -1,3 +1,4 @@
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
@@ -6,7 +7,7 @@
 
 #include <util/delay.h>
 //#include <util/setbaud.h>
-#define F_CPU 1000000UL
+//#define F_CPU 1000000UL
 
 void UART_init(void);
 char serial_getchar(FILE *);
