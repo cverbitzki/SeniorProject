@@ -20,7 +20,6 @@ public class Enter_IP extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enter_ip);
-        Button create_account = (Button) findViewById(R.id.register);
         Button login = (Button) findViewById(R.id.login);
         final EditText ip = (EditText) findViewById(R.id.ip);
 
@@ -33,16 +32,6 @@ public class Enter_IP extends AppCompatActivity{
                 startActivity(i);
             }
         });
-
-        create_account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Enter_IP.this, "Create Account Selected", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), CreateAccount.class);
-                startActivity(i);
-            }
-        });
-
 
 
     }

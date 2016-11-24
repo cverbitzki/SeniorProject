@@ -23,15 +23,16 @@
 
     <TextView
         android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Log In"
+        android:text="IP Address"
         android:id="@+id/title"
-        android:textSize="60dp"
+        android:textSize="50dp"
         android:textColor="#ffffff"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/ip"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="40dp"
+        android:layout_toStartOf="@+id/imageView"
+        android:layout_alignBottom="@+id/imageView" />
 
     <ImageView
         android:layout_width="350dp"
@@ -63,28 +64,16 @@
 
     <Button
         android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:text="LOG IN"
+        android:layout_height="100dp"
+        android:text="Proceed"
         android:id="@+id/login"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:textColor="#ffffff"
         android:background="#24c70e"
         android:textSize="25dp"
         android:layout_below="@+id/ip" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Account"
-        android:id="@+id/register"
-        android:layout_below="@+id/login"
-        android:layout_alignEnd="@+id/login"
-        android:layout_alignStart="@+id/login"
-        android:layout_marginTop="20dp"
-        android:background="#2249f9"
-        android:textColor="#ffffff"
-        android:singleLine="false" />
 </RelativeLayout>
 
 
