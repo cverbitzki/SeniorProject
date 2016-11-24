@@ -18,7 +18,7 @@
     <WebView
         android:layout_width="500dp"
         android:layout_height="45dp"
-        android:id="@+id/cam_picture"
+        android:id="@+id/picture1"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
         android:layout_below="@+id/LightView"

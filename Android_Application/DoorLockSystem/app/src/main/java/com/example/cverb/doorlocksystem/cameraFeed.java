@@ -7,19 +7,10 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ActionMenuView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,7 +40,7 @@ public class cameraFeed extends Activity {
 
 
 
-        wv2=(WebView)findViewById(R.id.cam_picture);
+        wv2=(WebView)findViewById(R.id.picture1);
         wv2.setWebViewClient(new MyBrowser());
         wv2.getSettings().setLoadsImagesAutomatically(true);
         wv2.getSettings().setJavaScriptEnabled(true);

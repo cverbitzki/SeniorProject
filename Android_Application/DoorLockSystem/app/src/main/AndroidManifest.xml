@@ -33,6 +33,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Doorbell"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Doorbell_Pictures"
+            android:screenOrientation="landscape"/>
 
         <service android:name=".Background"
             android:exported="false"

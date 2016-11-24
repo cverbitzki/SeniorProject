@@ -134,8 +134,8 @@ public class Background extends Service {
 // Green = 0xff00ff00
 // Alpha, R, G, B
                 builder.setLights(0x00FF00FF, 3000, 2000);
-                builder.setContentText("Someone is at the Door.");
-                Intent intent = new Intent(getApplicationContext(), Doorbell.class);
+                builder.setContentText("Someone is at the Door.\n Click to see pictures.");
+                Intent intent = new Intent(getApplicationContext(), Doorbell_Pictures.class);
                 android.app.TaskStackBuilder stackBuilder = android.app.TaskStackBuilder.create(getApplicationContext());
                 stackBuilder.addParentStack(Login.class);
                 stackBuilder.addNextIntent(intent);
