@@ -5,6 +5,19 @@
 #ifndef HAT_EEPROM_H
 #define HAT_EEPROM_H
 
+char get_eeprom_lock_state(
+	);
+void set_eeprom_lock_state(
+	char status
+	);
+
+char get_eeprom_light_state(
+	);
+void set_eeprom_light_state(
+	char status
+	);
+
+
 uint8_t check_pass(
 	char *pass
 	);

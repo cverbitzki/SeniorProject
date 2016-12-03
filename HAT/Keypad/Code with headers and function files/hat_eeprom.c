@@ -7,12 +7,41 @@
 #include <avr/interrupt.h>
 #include "hat_eeprom.h"
 
+uint8_t EEMEM lock_state_eeprom;
+uint8_t EEMEM light_state_eeprom;
 uint8_t EEMEM P_KEY_1;
 uint8_t EEMEM P_KEY_2;
 uint8_t EEMEM P_KEY_3;
 uint8_t EEMEM P_KEY_4;
 uint8_t EEMEM SPI_TX;
 uint8_t EEMEM SPI_RX;
+
+#define write_eeprom_array(address,value_p,length) eeprom_write_block ((const void *)value_p, (void *)address, length)
+#define read_eeprom_array(address,value_p,length) eeprom_read_block ((void *)value_p, (const void *)address, length)
+
+#define read_eeprom_word(address) eeprom_read_word ((const uint16_t*)address)
+#define write_eeprom_word(address,value) eeprom_write_word ((uint16_t*)address,(uint16_t)value)
+#define update_eeprom_word(address,value) eeprom_update_word ((uint16_t*)address,(uint16_t)value)
+
+char get_eeprom_lock_state()
+{
+	return read_eeprom_word(&lock_state_eeprom);
+}
+void set_eeprom_lock_state(char status)
+{
+	/* Write states to memory 	*/
+	write_eeprom_word(&lock_state_eeprom,status);
+}
+
+char get_eeprom_light_state()
+{
+	return read_eeprom_word(&light_state_eeprom);
+}
+void set_eeprom_light_state(char status)
+{
+	/* Write states to memory 	*/
+	write_eeprom_word(&light_state_eeprom,status);
+}
 
 uint8_t check_pass(char *pass)
 {
