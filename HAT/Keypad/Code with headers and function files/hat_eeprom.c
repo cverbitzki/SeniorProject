@@ -7,8 +7,13 @@
 #include <avr/interrupt.h>
 #include "hat_eeprom.h"
 
+// Static Addresses to hold states in EEPROM
 uint8_t EEMEM lock_state_eeprom;
 uint8_t EEMEM light_state_eeprom;
+uint8_t EEMEM pass_digit_1;
+uint8_t EEMEM pass_digit_2;
+uint8_t EEMEM pass_digit_3;
+uint8_t EEMEM pass_digit_4;
 uint8_t EEMEM P_KEY_1;
 uint8_t EEMEM P_KEY_2;
 uint8_t EEMEM P_KEY_3;
@@ -23,6 +28,32 @@ uint8_t EEMEM SPI_RX;
 #define write_eeprom_word(address,value) eeprom_write_word ((uint16_t*)address,(uint16_t)value)
 #define update_eeprom_word(address,value) eeprom_update_word ((uint16_t*)address,(uint16_t)value)
 
+char get_eeprom_password_digit_1()
+{
+	return read_eeprom_word(&pass_digit_1);
+}
+char get_eeprom_password_digit_2()
+{
+	return read_eeprom_word(&pass_digit_2);
+}
+char get_eeprom_password_digit_3()
+{
+	return read_eeprom_word(&pass_digit_3);
+}
+char get_eeprom_password_digit_4()
+{
+ 	return read_eeprom_word(&pass_digit_4);
+}
+void set_eeprom_password(char password[])
+{
+	/* Write password to memory 	*/
+	write_eeprom_word(&pass_digit_1,password[0]);
+	write_eeprom_word(&pass_digit_2,password[1]);
+	write_eeprom_word(&pass_digit_3,password[2]);
+	write_eeprom_word(&pass_digit_4,password[3]);
+}
+
+/* Functions for the getting and setting lock state */
 char get_eeprom_lock_state()
 {
 	return read_eeprom_word(&lock_state_eeprom);
@@ -33,6 +64,7 @@ void set_eeprom_lock_state(char status)
 	write_eeprom_word(&lock_state_eeprom,status);
 }
 
+/* Functions for the getting and setting light state */
 char get_eeprom_light_state()
 {
 	return read_eeprom_word(&light_state_eeprom);

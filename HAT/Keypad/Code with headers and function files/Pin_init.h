@@ -14,10 +14,10 @@
 #define output_high(port,pin) port |= (1<<pin)
 
 /* Constants for Pins */
-#define LED_KEY1 PC1          // ADC for motor position control
-#define LED_KEY2 PC0          // ADC for motor position control
-#define LED_KEY3 PB6
-#define LED_KEY4 PB7
+#define LOCK_ADC PC1            // ADC for motor position control
+#define UNLOCK_ADC PC0          // ADC for motor position control
+#define LED_KEY1 PB6
+#define LED_KEY2 PB7
 #define LED_RED PB1
 #define STEPPER1 PC5
 #define STEPPER2 PC4

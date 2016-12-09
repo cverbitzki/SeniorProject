@@ -6,3 +6,4 @@
 void lock_one_phase(void);
 void unlock_door(int rotation);
 void lock_door(int rotation);
+int check_lock(void);

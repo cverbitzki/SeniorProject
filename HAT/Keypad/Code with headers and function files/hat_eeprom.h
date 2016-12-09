@@ -5,6 +5,13 @@
 #ifndef HAT_EEPROM_H
 #define HAT_EEPROM_H
 
+char get_eeprom_password_digit_1();
+char get_eeprom_password_digit_2();
+char get_eeprom_password_digit_3();
+char get_eeprom_password_digit_4();
+
+void set_eeprom_password(char password[]);
+
 char get_eeprom_lock_state(
 	);
 void set_eeprom_lock_state(

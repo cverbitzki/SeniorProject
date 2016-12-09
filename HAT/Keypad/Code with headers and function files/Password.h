@@ -9,4 +9,5 @@
 
 int check_sequence(int password[], int holder[],int reset[]);
 int password_correct(int sequence_code, int lock_state);
+int password_change_verifier(int password[]);
 #endif

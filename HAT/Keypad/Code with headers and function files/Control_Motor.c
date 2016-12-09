@@ -2,6 +2,31 @@
 #include "Control_Motor.h"
 #include "Communication.h"
 
+int check_lock(void)
+{
+    // Check if deadbolt is unlocked
+    if (PINC & 0x01) {
+        /* Door is locked */
+        //output_low(PORTB, 6);
+        return 1;
+    }
+    else {
+        //output_high(PORTB, 6);
+        return 2;
+    }
+    // Check if deadbolt is unlocked
+    if (PINC & 0x02) {
+        /* Door is unlocked */
+        //output_low(PORTB, 7);
+        return 3;
+    }
+    else {
+        //output_high(PORTB, 7);
+        return 4;
+    }
+    return 0; // Neither
+}
+
 void lock_one_phase(void)
 {
   // Blue Wire + high for 15 milliseconds

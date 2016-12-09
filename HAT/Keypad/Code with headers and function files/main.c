@@ -29,7 +29,7 @@ int main( void )
     int light_state;       // State of Light Bulb (0 = OFF, 1 = ON)
     int doorbell_state = 0;
     int i = 0;           // Index for loops
-    int password[4] = {16,15,14,12}; // ***** TEMPORARY DEFINED PASSWORD ********
+    int password[4]; // ***** TEMPORARY DEFINED PASSWORD ********
     int password_backup[4];
     int holder[4];                  // Store password user enters
     int temp[4];                  // For password change verification of password first
@@ -45,14 +45,15 @@ int main( void )
     char data;
     int pass_index = 0;
     char pass[4] = "1234";
+        char password_temp[4];
     // /* Set up spi 	*/
   	spi_slave_init();
-    set_pass(pass);
+    //set_pass(pass);
     // /* Enable interrupts 	*/
   	sei();
     // Initialize other pins
     pin_init();
-    // Set initial lock state
+    /* Set initial lock state */
     lock_state_char = get_eeprom_lock_state();
     if(lock_state_char != '0' && lock_state_char != '1')
     {
@@ -66,7 +67,7 @@ int main( void )
       lock_state = 0;
       output_low(PORTB, LED_RED);  // RED LED indicates unlocked
     }
-    // Set initial light state
+    /* Set initial light state */
     light_state_char = get_eeprom_light_state();
     if(light_state_char != '0' && light_state_char != '1')
     {
@@ -80,6 +81,46 @@ int main( void )
       light_state = 0;
       output_low(PORTB, LIGHT);  // RED LED indicates unlocked
     }
+
+    get_pass(pass);
+    password[0] = keypad_key(pass[0]);
+    password[1] = keypad_key(pass[1]);
+    password[2] = keypad_key(pass[2]);
+    password[3] = keypad_key(pass[3]);
+
+    if(password[0] !=16 && password[0] != 15 && password[0] != 14 && password[0] != 13 && password[0] != 12 && password[0] != 11 && password[0] != 10 && password[0] != 9 && password[0] != 8 && password[0] != 7 && password[0] != 6 && password[0] != 5 && password[0] != 4 && password[0] != 3 && password[0] != 2 && password[0] != 1) // If there is no password set
+    {
+      // for(i = 0; i < 5; i++){
+      //   output_low(PORTB,LED_KEY2);
+      //   output_low(PORTB,LED_KEY1);
+      //   _delay_ms(1000);
+      //   output_high(PORTB,LED_KEY2);
+      //   output_high(PORTB,LED_KEY1);
+      //   _delay_ms(1000);
+      // }
+      pass[0] = '1';
+      pass[1] = '2';
+      pass[2] = '3';
+      pass[3] = '4';
+      set_pass(pass);
+      _delay_ms(500);
+      get_pass(pass);
+      password[0] = keypad_key(pass[0]);
+      password[1] = keypad_key(pass[1]);
+      password[2] = keypad_key(pass[2]);
+      password[3] = keypad_key(pass[3]);
+
+    }else if(password[0] ==16 && password[1] == 15 && password[2] == 14 && password[3] == 12){
+      // for(i = 0; i < 5; i++){
+      //   output_low(PORTB,LED_KEY2);
+      //   output_low(PORTB,LED_KEY1);
+      //   _delay_ms(5000);
+      //   output_high(PORTB,LED_KEY2);
+      //   output_high(PORTB,LED_KEY1);
+      //   _delay_ms(5000);
+      // }
+    }
+
 while(1){
 
       if (pass_index == 4) {
@@ -87,12 +128,12 @@ while(1){
       }
     	data = spi_get_rx();
 
-     if(data == 'P') {
-        get_pass(pass);
-        spi_write_tx(pass[pass_index]);
-        pass_index++;
-        spi_write_rx(0);
-     }
+    //  if(data == 'P') {
+    //     get_pass(pass);
+    //     spi_write_tx(pass[pass_index]);
+    //     pass_index++;
+    //     spi_write_rx(0);
+    //  }
 
     	if(data == 'L' && lock_state == 0) {         // PI is Locking door
         lock_state = 1;
@@ -158,8 +199,6 @@ while(1){
   if (!(PIND == 0x0F)) {               // Key in column 0,1,2,3 is pressed returns 0
       if(holder[index] = Read_key()){  // Locate exact key pressed
         _delay_ms(500);    // Key press debounce
-        /* Sets Password Digit Cursor LEDS */
-        set_digit_leds(index);
         /* Check for * or # keypress */
         if(holder[index] == 4){        // * pressed so reset user entered password
           index = -1;
@@ -179,6 +218,8 @@ while(1){
           doorbell_state = 1;
         }
         index++;                        // Move to next password digit entered by user
+        /* Sets Password Digit Cursor LEDS */
+        set_digit_leds(index);
       }
 
       /* Check after 4 digit sequence has been entered */
@@ -244,6 +285,25 @@ while(1){
               pass_change_leds(index);
               timer++;
             }
+            if(password_change_verifier(password) == 0){  // Error checking to see if keys entered for new password are allowed
+              for (i = 0; i < 4; i++) {
+                password[i] = password_backup[i];
+              }
+              for(i = 0; i < 20; i++){
+                output_low(PORTB,LED_KEY2);
+                output_low(PORTB,LED_KEY1);
+                _delay_ms(250);
+                output_high(PORTB,LED_KEY2);
+                output_high(PORTB,LED_KEY1);
+                _delay_ms(250);
+              }
+            }
+            pass[0] = software_key(password[0]);
+            pass[1] = software_key(password[1]);
+            pass[2] = software_key(password[2]);
+            pass[3] = software_key(password[3]);
+            set_pass(pass);
+            //set_eeprom_password(password_temp);
             timer = 0;
             sequence_code = 0;
           }
