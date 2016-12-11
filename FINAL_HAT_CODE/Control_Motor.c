@@ -10,14 +10,18 @@ int check_lock()
 {
     int return_value;
     // Check if deadbolt is unlocked
-    if (!(PINC & 0x01)) {
+    if ((PINC & 0x01)) {
         /* Door is locked */
         return_value = 0;
     }
     // Check if deadbolt is unlocked
-    if (!(PINC & 0x02)) {
+    if ((PINC & 0x02)) {
         /* Door is unlocked */
         return_value = 1;
+    }
+    if ((!(PINC & 0x01) && !(PINC & 0x02))) {
+        /* Middle state */
+        return_value = 2;
     }
     return return_value;
 }

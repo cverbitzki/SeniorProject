@@ -55,6 +55,7 @@ int main( void )
       blink_leds_password_wrong();
       blink_leds_password_wrong();
     }
+    // Check lock is 1 for unlocked, 0 for locked
     if(lock_state != check_lock()){
       if(check_lock() == 1){
         lock_state = 1;
