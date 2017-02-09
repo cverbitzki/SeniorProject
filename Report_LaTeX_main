@@ -1,7 +1,6 @@
 % % % Headers and definitions
 \documentclass{report}
 %\usepackage{times}
-
 \usepackage{fullpage} % sets more standardized margins
 \usepackage{graphicx} % some graphics functions I use 
 \usepackage{abstract} % abstract function
@@ -30,157 +29,258 @@
 
 \pagenumbering{gobble} % Turn off page numbering for titles and tables
 
-% Title and autheor
-% Title and autheor
+% Title and author
+
 \title{ \textbf{ECE 403 Design Project}\\
 	{Door Lock Monitoring System Report}\\
-		University of Maine}
-		\author{Jordan Millett, Computer Engineering\\
-		  	Christopher Verbitzki, Computer Engineering}
-			\date{Febuary 13, 2017}
-			\maketitle
+	University of Maine}
+\author{Jordan Millett, Computer Engineering\\
+  	Christopher Verbitzki, Computer Engineering}
+\date{Febuary 13, 2017}
+\maketitle
 
 
-			% % % % % % % % % % % % % % %		
-			% Abstract 
-			\begin{abstract}
-			The design of the electronic door lock system is described. The system  receives input from a physical keypad or through a web server to lock or unlock a deadbolt door lock. The web server is hosted on a Raspberry Pi. It features user access control, displaying the status of the lock, and history of access. The system also is able to feed a picture of what is in front of the door to the web server as well as controlling the outside lighting. An Android application and web client are designed to interface with the web server. A breakout board is designed for the Raspberry Pi. The breakout board handles the control of the dead bolt and outside lighting based off of input from the Pi or keypad.
-			\end{abstract}
+% % % % % % % % % % % % % % %		
+% Abstract 
+\begin{abstract}
+The design of the electronic door lock system is described. The system  receives input from a physical keypad or through a web server to lock or unlock a deadbolt door lock. The web server is hosted on a Raspberry Pi. It features user access control, displaying the status of the lock, and history of access. The system also is able to feed a picture of what is in front of the door to the web server as well as controlling the outside lighting. An Android application and web client are designed to interface with the web server. A breakout board is designed for the Raspberry Pi. The breakout board handles the control of the dead bolt and outside lighting based off of input from the Pi or keypad.
+\end{abstract}
 
-			% % % % % % % % % % % % % % % 
-			% Tables of contents, figures, tables, acronyms, etc
-			\newpage % jumps to new page
+% % % % % % % % % % % % % % % 
+% Tables of contents, figures, tables, acronyms, etc
+\newpage % jumps to new page
 
-			\tableofcontents
-
-
-			\newpage
-			\listoffigures
-			\listoftables
-
-			\newpage 
-			\clearpage
-
-			\pagenumbering{arabic} % Turn on page numbering
-
-			% % % % % % % % % % % % % % %
-			% Introduction
-			\section{Introduction}
-
-			\subsection{Project Purpose}
-			\subsection{Project Description}
-
-			\subsection{Project Specifications}
-			%PUT SPECIFICATIONS IN TABLE SHEAFF DOESNT LIKE LISTS
-			% % % % % % % % % % % % % % %
-			% Overview
-			\section{Breakdown}
-			This section provides a brief overview of the main functional blocks that make up this project. The functional blocks consist of the user interface (UI) or inputs, hardware attached to Raspberry Pi, motor driver, light controller, and battery backup. This section will further look into both the hardware and software components of the functional blocks listed. Figure \ref{fig:BlockDiag} below shows the block diagram of the project.
-
-			\begin{figure}[H]
-			\centering
-			\includegraphics[width=.7\textwidth]{BlockDiagram_v2.png}
-			\caption{Functional block diagram of Door Lock Monitoring System}
-			\label{fig:BlockDiag}
-			\end{figure}
-
-			As Figure \ref{fig:BlockDiag} shows, the system is powered by a Battery Backup circuit that is used to switch between mains power and battery power depending on availability. When on battery power only essential functions of the lock are in operation. The Door Lock Monitoring System works as two halves, which are connected between the Web Server and Control Unit. One half, with the Web Server, receives input from either the Android Application or Website and informs the Control Unit appropriately. Lastly on the other side, with the Control Unit, handles the Physical UI or keypad, as well as controlling the door lock itself or the light switch based on one of the inputs. 
-
-			\subsection{Hardware}
-			There are four blocks from Figure \ref{fig:BlockDiag} that are made up of hardware. The only functional block that has no hardware is the user interface which is made up of only software running on the Raspberry Pi and a smart phone with an Android operating system. The following subsections look at the hardware aspects of the functional blocks in Figure \ref{fig:BlockDiag}.
-
-			\subsubsection{Keypad Interface}
-			The keypad is the physical user interface that can be used to control the lock. Capabilities include unlocking and locking the door with a user set pass code, controlling the light switch, and changing the pass code. The keypad interface also uses two LEDs to inform the user about the state of the lock, and for when changing the pass code. 
-
-			\subsubsection{Battery Backup}
-			The battery backup is what handles the power delivery for the rest of the components. The circuit will normally use mains power, but when it is unplugged, or during a power outage, will switch to battery power. To maximize battery life, only critical components will actually receive battery power during an outage. These being the control unit and the motor driver. The battery backup circuit was designed such that there will be no loss of power to the components when switching between mains and the battery.
-
-			\subsubsection{Motor Driver}
-			The motor driver powers the motor based off of input from the control unit. The control unit is not able to supply enough power to move the motor, so it simply controls the motor driver, which handles the power delivery. The door lock motor is a two-phase stepper motor, meaning there are two phases in the motor that need to be powered separately. Furthermore, the current through the phases has to be able to be reversed, therefore the motor driver consists of two H-bridges which are able to meet these requirements. 
-
-			\subsubsection{Light Switch}
-			The light switching circuit is composed of a few components that allow the control unit to turn on and off a 120 VAC light bulb with only a 5V signal. The circuit uses an optoisolator and a bidirectional triode thyristor (TRIAC) to achieve this. The optoisolator was used in this circuit to keep the power to the control unit separated from the 120 VAC power. The purpose of the TRIAC is to allow such a small voltage and current produced from the control unit to control a much larger voltage and current that is used to light the light bulb.
-
-			\subsection{Software}
-			For this project software was developed in a variety of different programming languages. Software was developed for the control unit, Android Application, Website interface, and for the serial peripheral interface between the Raspberry Pi and control unit. The following subsections will provide a breakdown of the systems developed software.
-
-			\subsubsection{Control Unit}
-			The control unit for this project has three inputs and three outputs. The inputs consist of first the keypad presses which are used to verify the password for locking/unlocking the deadbolt. The other input to the system is information being sent from the Raspberry Pi over SPI. This information contains a code that informs the control unit of the current lock state, light state, and doorbell state. The final input to the control unit is two readings from two photo sensors that are set on the deadbolts locked and unlocked position. These sensors are used to verify if the deadbolt is in the same position that software thinks it is in.
-
-			The first output of the control unit is four control signals that are sent to the motor driver circuit which are used to energize the two phases on the stepper motor. The next output is a single control signal that is sent to the light control unit circuit that simply switches the 120 VAC on and off. The final output is multiple control signals that are used to illuminate infrared (IR) light emitting diodes (LED), an red green blue (RGB) LED, and two green LEDs. The IR LEDs are used to establish a light source for the photo photo sensor inputs. The RGB led is used to indicate the current state of the deadbolt lock. The green LEDs are used to provide feedback to the user of what mode the system is currently in.
-
-			\subsubsection{Serial Peripheral Interface}
-
-			The communication protocol for this system uses the serial peripheral interface (SPI). The purpose of this protocol is to transfer information between the control unit and the Raspberry Pi. This information consists of the current locks state, light state, and doorbell state. The two sides of this communication are working to update each side to the same correct states. 
-
-			\subsubsection{Web Interface and Android Application}
-			The on the go control for this project is made up of a web server, website interface, and Android application interface. The web server is used to host the website, provide information for the Android application, and store data in a SQL database on the back end. The website interface is used to allow the user of the system to view a log of the door locks activity, toggle the state of the lock, toggle the state of the light, and view a picture of the doors surroundings. The Android applications purpose is similar to the website interface in the sense that it has all the same features as the website. The Android application has a feature that is not on the website which is a doorbell monitor. When the doorbell is pressed on the system the Android application will receive a notification saying "Doorbell Rang" and then after 5 seconds another notification will appear with four different pictures of the doors surroundings so the user can know who rang the doorbell.
-
-			% % % % % % % % % % % % % % %		
-			% Design
-			\section{Design}
-
-			Jordan
-			\subsection{Hardware Design}
-			Jordan
-			\subsubsection{Keypad Interface}
-			Chris
-			\subsubsection{Motor Driver Circuitry}
-			Chris
-			\subsubsection{Battery Backup Circuitry}
-			Jordan
-			\subsubsection{Light Switching Circuitry}
-			Jordan
-			\subsection{Software Design}
-			Chris
-			\subsubsection{Control Unit}
-			Chris
-			\subsubsection{Serial Peripheral Interface}
-			Jordan
-			\subsubsection{Web Interface and Android Application}
-			Chris
-			% % % % % % % % % % % % % % %		
-			% Results
-			\section{Results}
-			Chris
-
-			\subsection{Stepper Motor}
-			Jordan
-
-			\subsection{Keypad Interface}
-			Chris
-			\subsection{Wireless Control}
-			Chris
-
-			% % % % % % % % % % % % % % %		
-			% Conclusion
-			\section{Conclusion}
-			Jordan
-
-			% % % % % % % % % % % % % % %		
-			% Appendices
-			\appendix
-			\section{Project Contract}
-
-			\section{Parts List}
-
-			\section{List of Sources}
-
-			[1] Andras Tantos, ‚ÄúH-Bridges - the basics‚Äù, www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/
-
-			[2] Robot Room, ‚ÄúH-Bridge Motor Driver Using Bipolar Transistors‚Äù, www.robotroom.com/BipolarHBridge.html
-
-			[3] Electronics Tutorials, ‚ÄúTriac Tutorial‚Äù, www.electronics-tutorials.ws/power/triac.html
-
-			[4] AsmyIdof StackExchange user, ‚ÄúTransistor Battery Backup Circuit‚Äù, www.electronics.stackexchange.com/a/179355
-
-			[5] Dakota Carll and Chris Martin, Advice on Battery Backup component selection
-
-			[6] Andrew Sheaff and Nuri Emanetoglu
-
-			[7] Nick Levesque, Soldering equipment and advice
-			\end{document}
+\tableofcontents
 
 
+\newpage
+\listoffigures
+\listoftables
+
+\newpage 
+\clearpage
+
+\pagenumbering{arabic} % Turn on page numbering
+
+% % % % % % % % % % % % % % %
+% Introduction
+\chapter{Introduction}
+
+\section{Project Purpose}
+\section{Project Description}
+
+\section{Project Specifications}
+%PUT SPECIFICATIONS IN TABLE SHEAFF DOESNT LIKE LISTS
+% % % % % % % % % % % % % % %
+% Overview
+\chapter{Breakdown}
+This section provides a brief overview of the main functional blocks that make up this project. The functional blocks consist of the user interface (UI) or inputs, hardware attached to Raspberry Pi, motor driver, light controller, and battery backup. This section will further look into both the hardware and software components of the functional blocks listed. Figure \ref{fig:BlockDiag} below shows the block diagram of the project.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.7\textwidth]{BlockDiagram_v2.png}
+\caption{Functional block diagram of Door Lock Monitoring System}
+\label{fig:BlockDiag}
+\end{figure}
+
+As Figure \ref{fig:BlockDiag} shows, the system is powered by a Battery Backup circuit that is used to switch between mains power and battery power depending on availability. When on battery power only essential functions of the lock are in operation. The Door Lock Monitoring System works as two halves, which are connected between the Web Server and Control Unit. One half, with the Web Server, receives input from either the Android Application or Website and informs the Control Unit appropriately. Lastly on the other side, with the Control Unit, handles the Physical UI or keypad, as well as controlling the door lock itself or the light switch based on one of the inputs. 
+
+\section{Hardware}
+There are four blocks from Figure \ref{fig:BlockDiag} that are made up of hardware. The only functional block that has no hardware is the user interface which is made up of only software running on the Raspberry Pi and a smart phone with an Android operating system. The following subsections look at the hardware aspects of the functional blocks in Figure \ref{fig:BlockDiag}.
+
+\subsection{Keypad Interface}
+The keypad is the physical user interface that can be used to control the lock. Capabilities include unlocking and locking the door with a user set pass code, controlling the light switch, and changing the pass code. The keypad interface also uses two LEDs to inform the user about the state of the lock, and for when changing the pass code. 
+
+\subsection{Battery Backup}
+The battery backup is what handles the power delivery for the rest of the components. The circuit will normally use mains power, but when it is unplugged, or during a power outage, will switch to battery power. To maximize battery life, only critical components will actually receive battery power during an outage. These being the control unit and the motor driver. The battery backup circuit was designed such that there will be no loss of power to the components when switching between mains and the battery.
+
+\subsection{Motor Driver}
+The motor driver powers the motor based off of input from the control unit. The control unit is not able to supply enough power to move the motor, so it simply controls the motor driver, which handles the power delivery. The door lock motor is a two-phase stepper motor, meaning there are two phases in the motor that need to be powered separately. Furthermore, the current through the phases has to be able to be reversed, therefore the motor driver consists of two H-bridges which are able to meet these requirements. 
+
+\subsection{Light Switch}
+The light switching circuit is composed of a few components that allow the control unit to turn on and off a 120 VAC light bulb with only a 5V signal. The circuit uses an optoisolator and a bidirectional triode thyristor (TRIAC) to achieve this. The optoisolator was used in this circuit to keep the power to the control unit separated from the 120 VAC power. The purpose of the TRIAC is to allow such a small voltage and current produced from the control unit to control a much larger voltage and current that is used to light the light bulb.
+
+\section{Software}
+For this project software was developed in a variety of different programming languages. Software was developed for the control unit, Android Application, Website interface, and for the serial peripheral interface between the Raspberry Pi and control unit. The following subsections will provide a breakdown of the systems developed software.
+
+\subsection{Control Unit}
+The control unit for this project has three inputs and three outputs. The inputs consist of first the keypad presses which are used to verify the password for locking/unlocking the deadbolt. The other input to the system is information being sent from the Raspberry Pi over SPI. This information contains a code that informs the control unit of the current lock state, light state, and doorbell state. The final input to the control unit is two readings from two photo sensors that are set on the deadbolts locked and unlocked position. These sensors are used to verify if the deadbolt is in the same position that software thinks it is in.
+
+The first output of the control unit is four control signals that are sent to the motor driver circuit which are used to energize the two phases on the stepper motor. The next output is a single control signal that is sent to the light control unit circuit that simply switches the 120 VAC on and off. The final output is multiple control signals that are used to illuminate infrared (IR) light emitting diodes (LED), an red green blue (RGB) LED, and two green LEDs. The IR LEDs are used to establish a light source for the photo photo sensor inputs. The RGB led is used to indicate the current state of the deadbolt lock. The green LEDs are used to provide feedback to the user of what mode the system is currently in.
+
+\subsection{Serial Peripheral Interface}
+
+The communication protocol for this system uses the serial peripheral interface (SPI). The purpose of this protocol is to transfer information between the control unit and the Raspberry Pi. This information consists of the current locks state, light state, and doorbell state. The two sides of this communication are working to update each side to the same correct states. 
+
+\subsection{Web Interface and Android Application}
+The on the go control for this project is made up of a web server, website interface, and Android application interface. The web server is used to host the website, provide information for the Android application, and store data in a SQL database on the back end. The website interface is used to allow the user of the system to view a log of the door locks activity, toggle the state of the lock, toggle the state of the light, and view a picture of the doors surroundings. The Android applications purpose is similar to the website interface in the sense that it has all the same features as the website. The Android application has a feature that is not on the website which is a doorbell monitor. When the doorbell is pressed on the system the Android application will receive a notification saying "Doorbell Rang" and then after 5 seconds another notification will appear with four different pictures of the doors surroundings so the user can know who rang the doorbell.
+
+% % % % % % % % % % % % % % %		
+% Design
+\chapter{Design}
+
+Jordan
+\section{Hardware Design}
+Jordan
+\subsection{Keypad Interface}
+Chris
+\subsection{Motor Driver Circuitry}
+Chris
+\subsection{Battery Backup Circuitry}
+Jordan
+\subsection{Light Switching Circuitry}
+Jordan
+\section{Software Design}
+Chris
+\subsection{Control Unit}
+Chris
+\subsection{Serial Peripheral Interface}
+Jordan
+\subsection{Web Interface and Android Application}
+Chris
+% % % % % % % % % % % % % % %		
+% Results
+\chapter{Results}
+Chris
+
+\section{Stepper Motor}
+Jordan
+
+\section{Keypad Interface}
+Chris
+\section{Wireless Control}
+Chris
+
+% % % % % % % % % % % % % % %		
+% Conclusion
+\chapter{Conclusion}
+Jordan
+
+% % % % % % % % % % % % % % %		
+% Appendices
+\appendix
+\chapter{List of Sources}
+[1] Andras Tantos, ìH-Bridges - the basicsî, www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/
+
+[2] Robot Room, ìH-Bridge Motor Driver Using Bipolar Transistorsî, www.robotroom.com/BipolarHBridge.html
+
+[3] Electronics Tutorials, ìTriac Tutorialî, www.electronics-tutorials.ws/power/triac.html
+
+[4] AsmyIdof StackExchange user, ìTransistor Battery Backup Circuitî, www.electronics.stackexchange.com/a/179355
+
+[5] Dakota Carll and Chris Martin, Advice on Battery Backup component selection
+
+[6] Andrew Sheaff and Nuri Emanetoglu
+
+[7] Nick Levesque, Soldering equipment and advice
+\chapter{Project Contract}
+\textbf{Summary \& Function:}
+
+This project will allow a user to unlock or lock a door in a short period of time from an Android application, web interface, or keypad. The user will also be able to control lights outside the door and take a picture of outside the door. From the keypad the user will be able to set a new password and there will also be a light emitting diode (LED) to indicate the state of the lock. 
+
+\textbf{Inputs:}
+\begin{itemize}
+  \item Android Application
+  \item Web interface
+  \item Keypad
+\end{itemize}
+
+\textbf{Outputs:}
+\begin{itemize}
+  \item Lock/Unlock Action of Deadbolt
+  \item Turn on or off 120VAC Light
+  \item Picture of outside of door
+  \item LED Indicator of Lock Status
+\end{itemize}
+
+\textbf{Specifications:}
+\begin{itemize}
+  \item Deadbolt will be moved with a stepper motor, a stepper motor driver circuit will be designed capable of supplying one amp per phase.
+  \item Turn on and off 120VAC light with a rating of at least 60 Watts without use of a relay.
+  \item The motor driver will be controlled with an embedded processor, without using a development board or pre-existing libraries not included in the hardware abstraction layer.
+  \item A Battery Backup circuit will be designed. 
+  \item After keypad code is entered by the user the lock should lock/unlock in under 3 seconds.
+  \item State of Lock will be displayed on Android application and next to keypad with LEDs.
+  \item Record Log of door locks, unlocks, and display log of locks/unlocks on Android  Application and web interface. 
+  \item Let user reset password on the keypad.  
+  \item View a picture, from the Pi, on android app from camera attached to the raspberry pi. 
+\end{itemize}
+\begin{verbatim}
+    ___________________________________		       _______________________________                       
+    Christopher Verbitzki   May 12, 2016        Jordan Millett   May 12, 2016
+\end{verbatim}
+
+\chapter{Schematics}
+
+
+\chapter{Parts List}
+\begin{tabular}{ |p{5cm}||p{3cm}|p{1.5cm}|p{0.5cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{Parts List} \\ 
+ \hline
+ \textbf{Component}&  \textbf{Part Number}& \textbf{Vendor}&\textbf{Qty}&  \textbf{Unit Cost} &  \textbf{Total Cost}\\
+ \hline
+ \hline
+ TRIAC Standard 400V 12A Through Hole&MAC12DGOS-ND&DigiKey&1&\$0.97&\$0.97\\
+ \hline
+  Optoisolator Triac &MOC3010M&DigiKey&1&\$0.72&\$0.72\\
+ \hline
+  TRANS NPN DARL 100V 2A&497-2533-5-ND&DigiKey&4&\$0.57&\$2.28\\
+  \hline
+  TRANS NPN DARL 60V 2A&497-2619-5-ND&DigiKey&1&\$0.65&\$2.60\\
+   \hline
+  AVR AVRÆ ATmega Microcontroller IC 8-Bit 20MHz 8KB (4K x 16) FLASH 28-PDIP
+&ATMEGA88A-PU-ND&DigiKey&1&\$3.25&\$3.25\\
+   \hline
+  Linear Voltage Regulator IC Positive Fixed 1 Output 5V 1.5A &497-1443-5-ND&DigiKey&1&\$0.44&\$0.44\\
+  \hline
+  0.33µF 50V Ceramic Capacitor Z5U Radial&399-9882-1-ND&DigiKey&1&\$0.43&\$0.43\\
+  \hline
+  0.1µF 50V Ceramic Capacitor Z5U Radial&399-14010-1-ND&DigiKey&1&\$0.23&\$0.23\\
+  \hline
+  Infrared (IR) Emitter 940nm 1.2V 100mA 60mW/sr @ 100mA 60∞ Radial&OED-EL-1L2&DigiKey&2&\$0.49&\$0.49\\
+  \hline
+  4Phototransistor 900nm Top View Radial&160-1987-ND&DigiKey&2&\$0.51&\$1.02\\
+  \hline
+  26 Position Header Connector 0.100" (2.54mm) Through Hole Gold&S7116-ND&DigiKey&1&\$1.96&\$1.96\\
+  \hline
+  Red, Green, Blue LED (RGB)&754-1492-ND&DigiKey&1&\$1.78&\$1.78\\
+  \hline
+  4 Position Wire to Board Terminal Block Horizontal with Board 0.138" (3.50mm) Through Hole&ED2742-ND&DigiKey&2&\$0.67&\$1.34\\
+  \hline
+  Power Barrel Connector Jack 2.10mm ID (0.083"), 5.50mm OD (0.217") Through Hole&732-5931-ND&DigiKey&1&\$1.15&\$1.15\\
+  \hline
+  Diode Schottky 20V 3A Through Hole DO-201AD&1N5820-E3/54GICT-ND&DigiKey&2&\$0.42&\$0.84\\
+  \hline
+  \end{tabular}
+  
+  
+\begin{tabular}{ |p{5cm}||p{3cm}|p{1.5cm}|p{0.5cm}|p{2cm}|p{2cm}|  }
+ \hline
+  MOSFET P-CH 100V 1A 4-DIP&IRFD9120-ND&DigiKey&1&\$0.87&\$0.87\\
+  \hline
+  Power Entry Connector Receptacle, Female Sockets NEMA 5-15 Panel Mount, Snap-In&Q227-ND&DigiKey&1&0.94&\$0.94\\
+  \hline
+  8 Positions Header, Unshrouded Connector 0.079" (2.00mm) Through Hole Gold&3M9327-ND&DigiKey&2&\$0.51&\$1.02\\
+  \hline
+  4x4 Keypad& N/A&N/A&1&\$5.00&\$5.00\\
+  \hline
+  Resistors (100k?, 10k?, 15k?, 1k?, 470?, 180?)&N/A&N/A&20&\$0.00475&\$0.095\\
+  \hline
+  5V 2A (2000mA) switching power supply - UL Listed&276&AdaFruit&1&\$7.95&\$7.95\\
+  \hline
+  Raspberry Pi Camera Board v2 - 8 MegaPixels&3099&AdaFruit&1&\$29.95&\$29.95\\
+  \hline
+  Stepper Motor -125 oz.in (200 setps/rev, 600mm)&ROB-13656&SparkFun&1&\$21.56&\$21.65\\
+  \hline
+  Raspberry Pi 3B&DEV-13825&SparkFun&1&\$39.95&\$39.95\\
+  \hline
+  4.75" x 2.25" Printed Circuit Board&N/A&OSH Park& 1 &\$17.81&\$17.81\\
+    \hline
+\end{tabular}
+
+
+
+\end{document}
 
 
