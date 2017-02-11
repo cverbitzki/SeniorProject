@@ -65,11 +65,18 @@ The design of the electronic door lock system is described. The system  receives
 % % % % % % % % % % % % % % %
 % Introduction
 \chapter{Introduction}
+Jordan
+
+The design and testing of the Door Lock Monitoring System is descried. throughout the report. Section 2 will present a breakdown or overview of the project. The design and details that make up the project will be explored in Section 3. The results recorded will be provided in Section 4 and Section 5 will conclude the report.
 
 \section{Project Purpose}
+Ever since the start of the 21st century technology has been rapidly advancing. In the early 2000's cell phone devices were not nearly as popular as they are today. With this growth and advancement, cell phones are now can be used as a valuable key in the area of home automation. This Door Lock Monitoring System provides a unique connection between the billions of cellphone and home owners. The system allows these owners to have full control of their homes doors from almost anywhere in the world. Owners of homes without this system are unaware of the activity at their home while they are away. Users of this system are able to check the door locks current state and have the ability to toggle the locks state to the lock or unlocked position. Some other features this system provides is the ability to views images of the doors surroundings and receive real time notifications of doorbell activity. With this system forgetting a physical key will never be a problem again because a password can be entered into a keypad on the door.
+
 \section{Project Description}
+This system was designed as a replacement for a conventional deadbolt door lock. The system is able to lock/unlock a deadbolt by driving a stepper motor either clockwise or counter clockwise. The lock state can be seen and manipulated on an Android application, website interface, and keypad. A camera is also fixed outside of the door which can be manipulated by both the Android application and website interface to show the user up to date images of their homes surrounds. If the user is checking the homes surroundings at night time they are also provided with a feature to see the state and toggle the state of a light by the camera. During a power outage this system is equipt with a backup battery designed to allow the systems core functions to work. These core functions consist of manipulation of the lock and light with only the physical keypad interface.
 
 \section{Project Specifications}
+Jordan
 %PUT SPECIFICATIONS IN TABLE SHEAFF DOESNT LIKE LISTS
 % % % % % % % % % % % % % % %
 % Overview
@@ -120,37 +127,72 @@ The on the go control for this project is made up of a web server, website inter
 \chapter{Design}
 
 Jordan
+
 \section{Hardware Design}
 Jordan
-\subsection{Keypad Interface}
+
+\subsection{Keypad}
 Chris
-\subsection{Motor Driver Circuitry}
+
+\subsection{Motor Driver}
 Chris
-\subsection{Battery Backup Circuitry}
+
+\subsection{Battery Backup}
 Jordan
-\subsection{Light Switching Circuitry}
+
+\subsection{Light Switching}
 Jordan
+
 \section{Software Design}
-Chris
+This section looks at the software that was developed for the Android application, website interface, control unit, and Raspberry Pi. Section 3.2.1 will discuss the software developed for the control unit mounted on the main board. The software developed for the serial peripheral interface between the Raspberry Pi and control unit will be discussed in Section 3.2.2. Finally Section 3.2.3 will the Android application software and includes details about the web scraping methods, interface, and background process.
+
 \subsection{Control Unit}
-Chris
+The control unit is made up of the ATMEGA88A-PU microcontroller. The software running on this microcontroller is developed in the programming language C. Immediately when the system is powered on the software will check if a current lock state exists in the electrically erasable programmable read-only memory (eeprom) and then will compare this state to the actual state of the physical lock which is determined by the photo sensors. If no lock state exists in eeprom the lock state will be updated to the actual lock state provided from the photo sensors detection. The users password for the system and the light state are also stored in the control units eeprom. 
+
+The next part of the software developed consists of an endless loop where the program hangs. In this loop there are two main goals the program needs to accomplish. The first goal is to communicate to the Raspberry Pi through SPI to update both sides of the correct lock state, light state, and doorbell state. The software developed for the SPI communication will be further looked at in Section 3.2.2. The second goal of the program is to check for a key press on the keypad and then act accordingly. 
+
+The keypad scanning software needs to handle accomplish five tasks. The first three tasks consist of single button presses of either the '*', '\#', or 'A' buttons. The first button '*' is essentially used as a reset button to clear the current password digits that have been entered. The next button '\#' is simply used to toggle the state of light bulb. The third button 'A' is used to represent and acts as the doorbell to the system. The fourth task the keypad scanning needs to account for is once the correct number of password digits is entered the software will check to verify if the password is correct. The final task is the software will allow the user to change to current password if the sequence '0000' is entered. After this sequence is entered the current password must then be entered before the program enters the function to enter a new password. The software will blink two green LEDs at different speeds to indicate whether the password was correctly change or not.
+
 \subsection{Serial Peripheral Interface}
 Jordan
-\subsection{Web Interface and Android Application}
-Chris
+
+**********( Talk about both sides of the SPI communication on Pi and ATMEGA)******
+\subsection{Web Interface and Web Server}
+The web interface and Android application both have a similar look and setup to the interface. The web interface is hosted by the Raspberry Pi which is physically connected to the system that is mounted on the door. The web server that is hosting the website interface also provides information for the Android application to obtain. The website interface was designed with some programming logic and the frameworks PHP, JavaScript, and then the markup language of HTML. Figure *********** below displays a screen shots of the user interface setup of the website interface. 
+
+***************** WEBSITE INTERFACE SCREEN SHOTS *****************
+
+The markup language HTML is used for displaying the information on the website shown above in a neat and user friendly manner. The HTML handles the displaying the buttons, text fields, images, and organizing the activity log in a table. A block diagram showing how the website software functions is shown below in Figure *******. 
+
+******************* WEBSITE BLOCK DIAGRAM FLOW ******************
+
+The HTML scripts use JavaScript to call the external PHP files to retrieve the locks state, lights state, cameras state, and activity data from an SQL database. The website interface also provides a web page that allows the owner of the system to change the password that is used to log into the Android application.
+
+\subsection{Android Application}
+The Android application which was written entirely using the programming language know as Java. The look and feel of the Android application is extremely similar to the website interface and this can be seen below in Figure **** which shows a few screen shots of the application.
+
+************* ANDROID APPLICATION SCREEN SHOTS *****************
+
+As shown above the first page the user will see when the application is opened is the log in page. The log in requires a default user email that isn't changeable and a password which can be both changed from the website and Android application. When the log in button is pressed the application will web scrape the web server being hosted on the Raspberry Pi to check to see if the account exists. The next page is simply a homepage where the user can navigate to different parts of the application depending on what they would like to monitor at their home. The three other pages within this application are mainly using a web view of the web interface pages that would specifically designed for a mobile format on a smart phone. The web viewing technique is the reason that both the Android application and web site interface have such a similar look and feel. Below in Figure **** shows how the software behind the android application functions.
+
+************ Block Diagram of android application software ****
+
+Outside of the software that was written to handle the text field, buttons, and web views there are two main parts to the software of this application. These parts consist of the method to web scrape the information from the web server and the background process to monitor the doorbell activity at the door. The web scraping involves retrieving the users credentials to log it, doorbell state, and images of the doors surroundings.  
+
 % % % % % % % % % % % % % % %		
 % Results
 \chapter{Results}
-Chris
+After the hardware was designed and the software was developed multiple tests were performed to verify each specification was met. All specifications from the proposed contract were met. Two extra features were added to the project and were successfully completed. These features include the doorbell monitoring feature and the lock position sensors. Measurements for the specifications are discussed in more detail below. The background process can be turned on or off from a page in the application and when the process is running it is checking the web server for the current state of the doorbell. As soon as the process sees that the doorbell has been pressed it will display a notification on the deceive to notify the user the doorbell has been rung.  A few seconds after this notification a second notification will pop up which if clicked on takes the user to a page that display four different pictures of the person who has rung the doorbell.
 
 \section{Stepper Motor}
 Jordan
 
 \section{Keypad Interface}
 Chris
+
 \section{Wireless Control}
 Chris
-
+*** Mention web view on android application increased performance and less delay instead of manually retrieving information ***
 % % % % % % % % % % % % % % %		
 % Conclusion
 \chapter{Conclusion}
@@ -211,7 +253,12 @@ This project will allow a user to unlock or lock a door in a short period of tim
 \end{verbatim}
 
 \chapter{Schematics}
-
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1.2, angle=90]{Schematic.JPG}
+\caption{Functional block diagram of Door Lock Monitoring System}
+\label{fig:BlockDiag}
+\end{figure}
 
 \chapter{Parts List}
 \begin{tabular}{ |p{5cm}||p{3cm}|p{1.5cm}|p{0.5cm}|p{2cm}|p{2cm}|  }
@@ -251,7 +298,7 @@ This project will allow a user to unlock or lock a door in a short period of tim
   Power Barrel Connector Jack 2.10mm ID (0.083"), 5.50mm OD (0.217") Through Hole&732-5931-ND&DigiKey&1&\$1.15&\$1.15\\
   \hline
   Diode Schottky 20V 3A Through Hole DO-201AD&1N5820-E3/54GICT-ND&DigiKey&2&\$0.42&\$0.84\\
-  \hline
+  \
   \end{tabular}
   
   
@@ -278,7 +325,6 @@ This project will allow a user to unlock or lock a door in a short period of tim
   4.75" x 2.25" Printed Circuit Board&N/A&OSH Park& 1 &\$17.81&\$17.81\\
     \hline
 \end{tabular}
-
 
 
 \end{document}
