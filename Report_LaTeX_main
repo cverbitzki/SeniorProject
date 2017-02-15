@@ -1,5 +1,5 @@
 % % % Headers and definitions
-\documentclass{report}
+\documentclass[openany]{report}
 %\usepackage{times}
 \usepackage{fullpage} % sets more standardized margins
 \usepackage{graphicx} % some graphics functions I use 
@@ -25,6 +25,15 @@
 \pretocmd{\subsubsection}{\addtocontents{toc}{\protect\addvspace{0\p@}}}{}{}
 \makeatother
 
+
+
+
+
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+
 \begin{document}
 
 \pagenumbering{gobble} % Turn off page numbering for titles and tables
@@ -43,6 +52,7 @@
 % % % % % % % % % % % % % % %		
 % Abstract 
 \begin{abstract}
+%Both
 The design of the electronic door lock system is described. The system  receives input from a physical keypad or through a web server to lock or unlock a deadbolt door lock. The web server is hosted on a Raspberry Pi. It features user access control, displaying the status of the lock, and history of access. The system also is able to feed a picture of what is in front of the door to the web server as well as controlling the outside lighting. An Android application and web client are designed to interface with the web server. A breakout board is designed for the Raspberry Pi. The breakout board handles the control of the dead bolt and outside lighting based off of input from the Pi or keypad.
 \end{abstract}
 
@@ -65,131 +75,268 @@ The design of the electronic door lock system is described. The system  receives
 % % % % % % % % % % % % % % %
 % Introduction
 \chapter{Introduction}
-Jordan
+%Jordan
 
 The design and testing of the Door Lock Monitoring System is descried. throughout the report. Section 2 will present a breakdown or overview of the project. The design and details that make up the project will be explored in Section 3. The results recorded will be provided in Section 4 and Section 5 will conclude the report.
 
 \section{Project Purpose}
-Ever since the start of the 21st century technology has been rapidly advancing. In the early 2000's cell phone devices were not nearly as popular as they are today. With this growth and advancement, cell phones are now can be used as a valuable key in the area of home automation. This Door Lock Monitoring System provides a unique connection between the billions of cellphone and home owners. The system allows these owners to have full control of their homes doors from almost anywhere in the world. Owners of homes without this system are unaware of the activity at their home while they are away. Users of this system are able to check the door locks current state and have the ability to toggle the locks state to the lock or unlocked position. Some other features this system provides is the ability to views images of the doors surroundings and receive real time notifications of doorbell activity. With this system forgetting a physical key will never be a problem again because a password can be entered into a keypad on the door.
+%Chris
+With the growth and advancement of cell phones devices over the years they can now be used as a valuable key for a home automation system. The designed Door Lock Monitoring System provides a unique connection between the billions of cellphone owners and home owners. This systems purpose is to allow these owners to have full control of their homes from almost anywhere in the world. Owners of homes without this system are unaware of the activity at their home while they are away. This system allows the user to check the door lock state and provides the ability to unlock the door for someone or lock the door if they forgot to lock it. Some other features this system provides is the ability to view images of the doors surroundings and receive real time notifications of doorbell activity. With this system, forgetting a physical key will never be a problem again because a password can be entered into a physical keypad on the door. This system is made to make the owners life more easier while also providing them with more access to their home.
 
 \section{Project Description}
-This system was designed as a replacement for a conventional deadbolt door lock. The system is able to lock/unlock a deadbolt by driving a stepper motor either clockwise or counter clockwise. The lock state can be seen and manipulated on an Android application, website interface, and keypad. A camera is also fixed outside of the door which can be manipulated by both the Android application and website interface to show the user up to date images of their homes surrounds. If the user is checking the homes surroundings at night time they are also provided with a feature to see the state and toggle the state of a light by the camera. During a power outage this system is equipt with a backup battery designed to allow the systems core functions to work. These core functions consist of manipulation of the lock and light with only the physical keypad interface.
+%Chris
+This system was designed as a replacement for a conventional deadbolt door lock. The system is able to lock/unlock a deadbolt by driving a stepper motor either clockwise or counter clockwise. The lock state can be seen and manipulated on an Android application, website interface, and physical keypad on the door. A camera is also fixed outside of the door which can be manipulated by both the Android application and website interface to show the user real time images of their home's surrounds. If the user is checking the home's surroundings at night time they are also provided with a feature to toggle the state of a light bulb to provide the camera with more lighting. During a power outage this system is equipt with a backup battery designed to allow the systems core functions to work. These core functions consist of manipulation of the lock and light with only the physical keypad interface. A similar product that is currently on the market is known as the Kwikset Kevo Smart Lock which retails for around \$230. This product provides the user with the ability to lock/unlock a door with their phone. The downside to this system is the connection between the cell phone and door lock is through blue tooth so the user must be next to the door to control the lock. The Door Lock System designed provides users with the similar and more features than the Kevo smart lock at a lower cost.
 
 \section{Project Specifications}
-Jordan
+%Jordan
+The Door Lock Monitoring System was designed to meet specifications that would prove its functionality, which will be briefly discussed in this section. The specifications also advance the in depth design of the project by limiting components, such as the 120VAC light switch. All of the specifications can be found in the table below as well as in the contract in Appendix B. 
+
+\begin{table}[H]
+\centering
+\caption{Door Lock Monitoring System Specifications}
+\begin{tabular}{ ||p{0.5cm}||p{12.75cm}||p{2cm}||  }
+ \hline
+ \textbf{\#}& \textbf{Specification on Contract}\\
+ \hline
+ \textbf{1}& Deadbolt will be moved with a stepper motor, a stepper motor driver circuit will be  designed capable of supplying one amp per phase. \\
+ \hline
+ \textbf{2}& Turn on and off 120VAC light with a rating of at least 60 Watts without use of a relay. \\
+ \hline
+ \textbf{3}& The motor driver will be controlled with an embedded processor, without using a development board or pre-existing libraries not included in the hardware abstraction layer. \\
+ \hline
+ \textbf{4}& A Battery Backup circuit will be designed. \\
+ \hline
+ \textbf{5}& After keypad code is entered by the user the lock should lock/unlock in under 3 seconds. \\
+ \hline
+ \textbf{6}& State of Lock will be displayed on Android application and next to keypad with LEDs. \\
+ \hline
+ \textbf{7}& Record Log of door locks, unlocks, and display log of locks/unlocks on Android  Application and web interface.  \\
+ \hline
+ \textbf{8}& Let user reset password on the keypad.  \\
+ \hline
+ \textbf{9}& View a picture, from the Pi, on android app from camera attached to the raspberry pi.  \\
+ \hline
+ \end{tabular}
+ \label{tab:specs_table}
+\end{table}
+
+The first specification is used to demonstrate the capability of the motor driver, since it is what controls the motor for the door lock, and helps prove the basic door lock functionality of the system. Next the 120VAC light switch adds a feature to the project, and verifies it will be robust enough to handle a 60W light bulb. Limiting the switch to be built without the use of a relay reduced the overall size of this circuit. The next specification is directed towards the control unit, limiting the development to only use core libraries. Thus any abstract routines in software must be developed on their own. The fourth specification requires the use of the backup battery circuit, which makes the system more real world ready. Next the lock should activate, and either lock or unlock, within 3 seconds of an user entering a pass code on the keypad. To aid the keypad, LED's must be used to alert the user if the pass code is incorrect or if they enter the change pass code setting. The ability to set a pass code with the keypad is also specified. To include monitoring in this project, it is specified that the Android application and web site will be able to view a log of door locks and unlocks. Finally, the Android application and web site must be able to view a picture of the view outside the door. 
+
 %PUT SPECIFICATIONS IN TABLE SHEAFF DOESNT LIKE LISTS
 % % % % % % % % % % % % % % %
 % Overview
 \chapter{Breakdown}
-This section provides a brief overview of the main functional blocks that make up this project. The functional blocks consist of the user interface (UI) or inputs, hardware attached to Raspberry Pi, motor driver, light controller, and battery backup. This section will further look into both the hardware and software components of the functional blocks listed. Figure \ref{fig:BlockDiag} below shows the block diagram of the project.
+This section provides a brief overview of the main functional blocks that make up this project. The functional blocks consist of the user interface (UI) or inputs, hardware attached to Raspberry Pi, motor driver, light controller, and battery backup. This section will further look into both the hardware and software components of the functional blocks listed. Figure \ref{fig:Block_Diag} below shows the block diagram of the project.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=.7\textwidth]{BlockDiagram_v2.png}
 \caption{Functional block diagram of Door Lock Monitoring System}
-\label{fig:BlockDiag}
+\label{fig:Block_Diag}
 \end{figure}
 
-As Figure \ref{fig:BlockDiag} shows, the system is powered by a Battery Backup circuit that is used to switch between mains power and battery power depending on availability. When on battery power only essential functions of the lock are in operation. The Door Lock Monitoring System works as two halves, which are connected between the Web Server and Control Unit. One half, with the Web Server, receives input from either the Android Application or Website and informs the Control Unit appropriately. Lastly on the other side, with the Control Unit, handles the Physical UI or keypad, as well as controlling the door lock itself or the light switch based on one of the inputs. 
+As Figure \ref{fig:Block_Diag} shows, the system is powered by a Battery Backup circuit that is used to switch between mains power and battery power depending on availability. When on battery power only essential functions of the lock are in operation. The Door Lock Monitoring System works as two halves, which are connected between the Web Server and Control Unit. One half, with the Web Server, receives input from either the Android Application or Website and informs the Control Unit appropriately. Lastly on the other side, with the Control Unit, handles the Physical UI or keypad, as well as controlling the door lock itself or the light switch based on one of the inputs. 
 
 \section{Hardware}
-There are four blocks from Figure \ref{fig:BlockDiag} that are made up of hardware. The only functional block that has no hardware is the user interface which is made up of only software running on the Raspberry Pi and a smart phone with an Android operating system. The following subsections look at the hardware aspects of the functional blocks in Figure \ref{fig:BlockDiag}.
+%Jordan
+Four blocks from Figure \ref{fig:Block_Diag} are made up of hardware. The only functional block that has no hardware is the user interface which is made up of only software running on the Raspberry Pi and a smart phone with an Android operating system. The following subsections look at the hardware aspects of the functional blocks in Figure \ref{fig:Block_Diag}.
 
 \subsection{Keypad Interface}
+%Chris
 The keypad is the physical user interface that can be used to control the lock. Capabilities include unlocking and locking the door with a user set pass code, controlling the light switch, and changing the pass code. The keypad interface also uses two LEDs to inform the user about the state of the lock, and for when changing the pass code. 
 
+\subsection{Power Supplies}
+%Chris
+For this system two separate power supplies power the entire system at different times. The first power supply would be plugged into a wall outlet in the owners home and it provides 5V and 2A. The supply must produce 5V because the microcontroller in the control unit has an operating voltage between 5.5V - 1.8V. This supply was selected to also provide 2A of current because of the specification that specifies that the motor driver needs to supply 1A per phase for the stepper motor. The second power supply is four AA batteries. These batteries will only power the system if the power from the house goes down. The battery backup circuit handles this switching between the two power supplies.
+
 \subsection{Battery Backup}
+%Jordan
 The battery backup is what handles the power delivery for the rest of the components. The circuit will normally use mains power, but when it is unplugged, or during a power outage, will switch to battery power. To maximize battery life, only critical components will actually receive battery power during an outage. These being the control unit and the motor driver. The battery backup circuit was designed such that there will be no loss of power to the components when switching between mains and the battery.
 
 \subsection{Motor Driver}
-The motor driver powers the motor based off of input from the control unit. The control unit is not able to supply enough power to move the motor, so it simply controls the motor driver, which handles the power delivery. The door lock motor is a two-phase stepper motor, meaning there are two phases in the motor that need to be powered separately. Furthermore, the current through the phases has to be able to be reversed, therefore the motor driver consists of two H-bridges which are able to meet these requirements. 
+%Jordan
+The motor driver powers the motor based off of input from the control unit. The control unit is not able to supply enough power to move the motor, so it simply controls the motor driver, which handles the power delivery. The door lock motor is a two-phase stepper motor, meaning two phases in the motor must be powered separately. Furthermore, the current through the phases has to be able to be reversed, therefore the motor driver consists of two H-bridges which are able to meet these requirements. 
 
 \subsection{Light Switch}
+%Jordan
 The light switching circuit is composed of a few components that allow the control unit to turn on and off a 120 VAC light bulb with only a 5V signal. The circuit uses an optoisolator and a bidirectional triode thyristor (TRIAC) to achieve this. The optoisolator was used in this circuit to keep the power to the control unit separated from the 120 VAC power. The purpose of the TRIAC is to allow such a small voltage and current produced from the control unit to control a much larger voltage and current that is used to light the light bulb.
 
 \section{Software}
-For this project software was developed in a variety of different programming languages. Software was developed for the control unit, Android Application, Website interface, and for the serial peripheral interface between the Raspberry Pi and control unit. The following subsections will provide a breakdown of the systems developed software.
+%Chris
+For this project software is developed in a variety of different programming languages which include C, Java, and PHP. Software was developed for the control unit, Android Application, Website interface, and for the serial peripheral interface between the Raspberry Pi and control unit. The following subsections provide a breakdown of the system's developed software.
 
 \subsection{Control Unit}
-The control unit for this project has three inputs and three outputs. The inputs consist of first the keypad presses which are used to verify the password for locking/unlocking the deadbolt. The other input to the system is information being sent from the Raspberry Pi over SPI. This information contains a code that informs the control unit of the current lock state, light state, and doorbell state. The final input to the control unit is two readings from two photo sensors that are set on the deadbolts locked and unlocked position. These sensors are used to verify if the deadbolt is in the same position that software thinks it is in.
+%Chris
+The control unit is made up of an ATmega88PA microcontroller. The main purpose of the control unit is to control the motor to turn the lock, toggling the state of the 120VAC light bulb, reading input from the keypad, and displaying the state of the system. The control unit for this project has three inputs and three outputs. 
+
+The inputs consist of first the keypad presses which are used to verify the password for locking/unlocking the deadbolt. The other input to the system is information being sent from the Raspberry Pi over SPI. This information contains a code that informs the control unit of the current lock state, light state, and doorbell state. The final input to the control unit is two readings from two photo sensors that are set on the locked and unlocked positions of the deadbolt. These sensors are used to verify if the deadbolt is in the same position that software thinks it is in.
 
 The first output of the control unit is four control signals that are sent to the motor driver circuit which are used to energize the two phases on the stepper motor. The next output is a single control signal that is sent to the light control unit circuit that simply switches the 120 VAC on and off. The final output is multiple control signals that are used to illuminate infrared (IR) light emitting diodes (LED), an red green blue (RGB) LED, and two green LEDs. The IR LEDs are used to establish a light source for the photo photo sensor inputs. The RGB led is used to indicate the current state of the deadbolt lock. The green LEDs are used to provide feedback to the user of what mode the system is currently in.
 
 \subsection{Serial Peripheral Interface}
-
+%Jordan
 The communication protocol for this system uses the serial peripheral interface (SPI). The purpose of this protocol is to transfer information between the control unit and the Raspberry Pi. This information consists of the current locks state, light state, and doorbell state. The two sides of this communication are working to update each side to the same correct states. 
 
 \subsection{Web Interface and Android Application}
-The on the go control for this project is made up of a web server, website interface, and Android application interface. The web server is used to host the website, provide information for the Android application, and store data in a SQL database on the back end. The website interface is used to allow the user of the system to view a log of the door locks activity, toggle the state of the lock, toggle the state of the light, and view a picture of the doors surroundings. The Android applications purpose is similar to the website interface in the sense that it has all the same features as the website. The Android application has a feature that is not on the website which is a doorbell monitor. When the doorbell is pressed on the system the Android application will receive a notification saying "Doorbell Rang" and then after 5 seconds another notification will appear with four different pictures of the doors surroundings so the user can know who rang the doorbell.
+%Chris
+The on the go control for this project is made up of a web server, website interface, and Android application interface. The web server hosts the website, provides information for the Android application, and stores data in a SQL database on the back end. The website interface allows the user of the system to view a log of the door lock's activity, toggle the state of the lock, toggle the state of the light, and view a picture of the doors surroundings. The Android applications purpose is similar to the website interface in the sense that it has all the same features as the website. The Android application has a feature that is not on the website which is a doorbell monitor. When the doorbell is pressed on the system the Android application will receive a notification saying "Doorbell Rang" and then after 5 seconds another notification will appear with four different images of the doors surroundings so the user can know who rang the doorbell.
 
 % % % % % % % % % % % % % % %		
 % Design
 \chapter{Design}
-
+%Jordan
 This section will discuss the design process and the decisions that were made to complete the project and meet specifications. For this section, the project will be split into the hardware and software components, the hardware will be discussed first, looking at component selection and circuit design. Followed by the software, which includes the control unit, web server, and Android application.
 
 \section{Hardware Design}
-
+%Jordan
 The hardware design for this project involves three circuits, which are the motor driver, the battery backup, and the 120 VAC light switch. As well as the keypad and the power supplies. Each will be discussed in the following sections. 
 
 \subsection{Keypad}
-The keypad for this project acts as the only physical interface for this system. If the power goes down or the Internet connection fails the keypad is the only way to manipulate the system. For the keypad a 4x4 keypad matrix was used. The keypad uses 8 pins, with 4 for the rows, and 4 for the columns of the keys. Figure \ref{fig:Keypad_Schematic}
+%Chris
+The keypad for this project acts as the only physical interface for this system. If the power goes down or the Internet connection fails the keypad is the only reliable way to manipulate the system. For the keypad a 4x4 keypad matrix was used. The keypad uses 8 pins, with 4 for the rows, and 4 for the columns of the keys. The wiring for the keypad to the microcontroller can be seen below in Figure \ref{fig:Keypad_Schematic}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.55, angle=0]{Keypad_Schematic.png}
-\caption{Screenshots of website interface}
+\caption{Keypad wiring diagram}
 \label{fig:Keypad_Schematic}
 \end{figure}
 
-The Figure above shows that the keypad lines are connected to every Port D pin on the microcontroller. The rows and columns of the keypad are both connected with internal pull up resistors when Port D is initialized in the microcontroller software. These pull up resisters prevent noise from interfering with the keys when they are floating. 
+The Figure above shows that the keypad lines are connected to every Port D pin on the microcontroller. The rows and columns of the keypad are both connected with internal pull up resistors when Port D is initialized in the microcontroller software. These pull up resisters prevent noise from interfering with the keys when they are not being pressed. 
 
 \subsection{Motor Driver}
-The motor driver circuit is a key block in order for this system to function properly. This circuit was designed to supply at least 1A per phase in order to provide the stepper motor with enough power to reliably turn the deadbolt. The design of the motor driver uses two separate H-Bridge circuits for driving each phase on the bipolar stepper motor. Figure \ref{fig:Motor_Driver} below shows the schematic of the H-Bridge circuit that was designed for each single phase.
+%Chris
+The motor driver circuit is a crucial block for this system to function properly. This circuit was designed to supply at least 1A per phase to provide the stepper motor with enough power to reliably turn the deadbolt. The design of the motor driver uses two separate H-Bridge circuits for driving each phase on the bipolar stepper motor. Figure \ref{fig:Motor_Driver} below shows the schematic of the H-Bridge circuit that was designed for each single phase.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.55, angle=0]{Motor_Driver.png}
-\caption{Screenshots of website interface}
+\caption{Motor driver schematic}
 \label{fig:Motor_Driver}
 \end{figure}
 
-The Figure above shows the schematic for the H-Bridge that drives current through a single coil within the stepper motor. For the stepper motor to turn properly in one direction the current traveling through the current needs to change directions after every couple of steps. To achieve this two 2N3904 NPN transistors are used to control the direction of the current. When the left digital I/O line is high and the right digital I/O line is low the current will travel through the coil in the reverse direction. To flip the direction of the current the digital I/O lines values must be flipped. The H-Bridge is composed of 4 darlington transistors. The top two TIP 115 transistors are PNP and the bottom two TIP 112 transistors are NPN. To allow current to flow from the supply (Top) to ground (bottom) one PNP transistor must be turned on and one NPN transistor must be turned on.
+For the stepper motor to turn properly in one direction the current traveling through the coil needs to change directions after every couple of steps [1]. To achieve this two 2N3904 NPN transistors control the direction of the current. When the left digital I/O line is high and the right digital I/O line is low the current will travel through the coil in the reverse direction. To flip the direction of the current the digital I/O lines values must be flipped. The H-Bridge is composed of 4 Darlington pair transistors. The top two TIP 115 transistors are PNP and the bottom two TIP 112 transistors are NPN [2]. To allow current to flow from the supply (Top) to ground (bottom) one PNP transistor must be turned on and one NPN transistor must be turned on.
 
-\subsection{Power Supplies}
-For this system there are two separate power supplies that power the entire system. The first power supply would be plugged into a wall outlet in the owners home and it provides 5V and 2A. The supply must produce 5V because the microcontroller in the control unit has an operating voltage between 5.5V - 1.8V. This supply was selected to also provide 2A of current because of the specification that specifies that the motor driver needs to supply 1A per phase for the stepper motor. The second power supply is four AA batteries. These batteries will only power the system if the power from the house goes down. The battery backup circuit handles this switching between the two power supplies.
 
 \subsection{Battery Backup} 
 % Jordan
-The battery backup circuit is an integral part of the Door Lock Monitoring System since it allows the lock functionality to not hinder during a power outage. This is accomplished by using transistors to switch between mains power and battery power, when mains is not available. The circuit was designed with two main considerations, it can not limit power to the other circuits, especially the motor driver, and it must switch between power sources fast enough that the control unit will not lose power.   
+The battery backup circuit is an integral part of the Door Lock Monitoring System since it allows the lock functionality to not hinder during a power outage. This is accomplished by using transistors to switch between mains power and battery power, when mains is not available. The circuit was designed with two main considerations, it can not limit power to the other circuits, especially the motor driver, and that it must switch between power sources fast enough that the control unit will not lose power, which is achieved with the help of bypass capacitors next to the control unit. The schematic of the backup battery circuit is shown below in Figure \ref{fig:Battery_Schematic}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.8, angle=0]{BatteryCircuit.png}
+\caption{Battery Backup Circuit}
+\label{fig:Battery_Schematic}
+\end{figure}
+
+The circuit uses a series of BJT transistors that are controlled by the availability of mains power, this means there is minimal delay between losing mains power and switching to battery power. The switch starts with the NPN transistor Q3 which is controlled directly by the presence of mains power. While mains is on, Q3 causes the base of Q2 to be shorted to ground, which prevents Q2 from entering saturation mode. Thus the base of the PNP Q1 is held high. However when mains is lost, the base of Q1 is pulled down and Q1 enters saturation, letting battery power into the circuit. 
+
 
 \subsection{Light Switching}
 % Jordan
-The final circuit for the hardware design is the light switch. The Door Lock monitoring System specifies the ability to control a 120 VAC 60W light, without the use of a relay. Instead, a TRIAC, or TRIode for Alternating Currents, is used. The TRIAC is triggered by using an optoisolator, which completely separates the control signal from the control unit from the high voltage AC. 
+The final circuit for the hardware design is the light switch. The Door Lock monitoring System specifies the ability to control a 120 VAC 60W light, without the use of a relay. Instead, a TRIAC, or TRIode for Alternating Currents, is used. The TRIAC is triggered by using an optoisolator, which completely separates the control signal from the control unit from the high voltage AC. This prevents the rest of the system from being damaged during component failure or a voltage spike. The schematic for the light switching circuit is shown below in Figure \ref{fig:Triac_Schematic}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7, angle=0]{Triac.png}
+\caption{Light Switch Circuit}
+\label{fig:Triac_Schematic}
+\end{figure}
+
 
 \section{Software Design}
-This section looks at the software that was developed for the Android application, website interface, control unit, and Raspberry Pi. Section 3.2.1 will discuss the software developed for the control unit mounted on the main board. The software developed for the serial peripheral interface between the Raspberry Pi and control unit will be discussed in Section 3.2.2. Finally Section 3.2.3 will the Android application software and includes details about the web scraping methods, interface, and background process.
+%Chris
+This section looks at the software developed for the Android application, website interface, control unit, and Raspberry Pi. Section 3.2.1 discusses the software developed for the control unit mounted on the main board. The software developed for the serial peripheral interface between the Raspberry Pi and control unit will be discussed in Section 3.2.2. Finally Section 3.2.3 will the Android application software and includes details about the web scraping methods, interface, and background process.
 
 \subsection{Control Unit}
+%Chris
 The control unit is made up of the ATMEGA88A-PU microcontroller. The software running on this microcontroller is developed in the programming language C. Immediately when the system is powered on the software will check if a current lock state exists in the electrically erasable programmable read-only memory (eeprom) and then will compare this state to the actual state of the physical lock which is determined by the photo sensors. If no lock state exists in eeprom the lock state will be updated to the actual lock state provided from the photo sensors detection. The users password for the system and the light state are also stored in the control units eeprom. 
 
-The next part of the software developed consists of an endless loop where the program hangs. In this loop there are two main goals the program needs to accomplish. The first goal is to communicate to the Raspberry Pi through SPI to update both sides of the correct lock state, light state, and doorbell state. The software developed for the SPI communication will be further looked at in Section 3.2.2. The second goal of the program is to check for a key press on the keypad and then act accordingly. 
+The next part of the software developed consists of an endless loop where the program loops. The program must accomplish two basic goals. The first goal is to communicate to the Raspberry Pi through SPI to update both sides of the correct lock state, light state, and doorbell state. The software developed for the SPI communication will be further looked at in Section 3.2.2. The second goal of the program is to check for a key press on the keypad and then act accordingly. 
 
 The keypad scanning software needs to handle accomplish five tasks. The first three tasks consist of single button presses of either the '*', '\#', or 'A' buttons. The first button '*' is essentially used as a reset button to clear the current password digits that have been entered. The next button '\#' is simply used to toggle the state of light bulb. The third button 'A' is used to represent and acts as the doorbell to the system. The fourth task the keypad scanning needs to account for is once the correct number of password digits is entered the software will check to verify if the password is correct. The final task is the software will allow the user to change to current password if the sequence '0000' is entered. After this sequence is entered the current password must then be entered before the program enters the function to enter a new password. The software will blink two green LEDs at different speeds to indicate whether the password was correctly change or not.
 
 \subsection{Keypad}
-The keypad scanning software is written using a single function that has no inputs and returns a value that determines what key is pressed. Every loop of the while(1) loop in the main the keypad will be scanned once to check for a key press. When the software scans for a key press it will check the port D PIND input address value and preform a bitwise AND comparison with a specific number that represents either a certain column or row. An example of how this software works is say the number '2' is pressed on the keypad, so the key at column 2 and row 1 has been pressed. So first each column will be checked to see if there is a low value at one of the four pins meaning that key is pressed. So the software will see the low value at column 2 and will set the variable being returned by the function to a value of 2. Next each row will be checked for a low value and the software will see that row 1 is low. The return variable will now be incremented by a certain about to specify the exact key that is pressed at column 2 and row 1. 
+%Chris
+The keypad scanning software is written using a single function that has no inputs and returns a value that determines what key is pressed. Every loop of the while(1) loop in main() the keypad will be scanned once to check for a key press. When the software scans for a key press it will check the port D PIND input address values and preform a bitwise AND comparison with a specific number that represents either a certain column or row. 
 
+Say the number '2' is pressed on the keypad, so the key at column 2 and row 1 has been pressed. First each column will be checked to see if a low value at one of the four pins. A low value in this case represents a key press. The software will see the low value at column 2 and will return a specific value that can be seen below in Table \ref{tab:keypad_values}. Next each row will be checked for a low value and the software will see that row 1 is low. The specific value for row 1 can also be seen in the Table below.
 
+\begin{table}[H]
+\centering
+\caption{Row and Column match return values}
+\begin{tabular}{ ||p{0.5cm}||p{4cm}||p{4cm}||  }
+ \hline
+ \textbf{\#}& \textbf{Row return values}& \textbf{Column return values}\\
+ \hline
+ \textbf{1}& 13 & 3 \\
+ \hline
+ \textbf{2}& 9 & 2 \\
+ \hline
+ \textbf{3}& 5 & 1 \\
+ \hline
+ \textbf{4}& 1 & 0 \\
+ \hline
+ \end{tabular}
+ \label{tab:keypad_values}
+\end{table}
+
+The column value for the example above would be 2 and the row value would be 13. These two values would then be added together to form a new value of 15. This new value  represents a unique identifier of one button out of the the 16 buttons available on the keypad. A list of the unique identifier values can be seen below in Table \ref{tab:keypad_final_values}  
+
+\begin{table}[H]
+\centering
+\caption{Row and Column match return values}
+\begin{tabular}{ ||p{3cm}||p{3cm}||  }
+ \hline
+ \textbf{Keypad Symbol}& \textbf{Unique Identifier}\\
+ \hline
+ \textbf{1}& 16 \\
+ \hline
+ \textbf{2}& 15 \\
+ \hline
+ \textbf{3}& 14 \\
+ \hline
+ \textbf{A}& 13 \\
+ \hline
+ \textbf{4}& 12 \\
+ \hline
+ \textbf{5}& 11  \\
+ \hline
+ \textbf{6}& 10 \\
+ \hline
+ \textbf{B}& 9\\
+ \hline
+ \textbf{7}& 8 \\
+ \hline
+ \textbf{8}& 7  \\
+ \hline
+ \textbf{9}& 6\\
+ \hline
+ \textbf{C}& 5 \\
+ \hline
+ \textbf{*}& 4 \\
+ \hline
+ \textbf{0}& 3 \\
+ \hline
+ \textbf{\#}& 2 \\
+ \hline
+ \textbf{D}& 1 \\
+ \hline
+ \end{tabular}
+ \label{tab:keypad_final_values}
+\end{table}
+
+Lastly another quick example would be if the button '5' is being pressed then the return values of row 2 and column 2 in Table \ref{tab:keypad_values} would be added together. So the resulting value of this would be 9 plus 2 which is 11. Table \ref{tab:keypad_final_values} shows the button '5' has a unique identifier of 11. 
 
 \subsection{Serial Peripheral Interface}
 % Jordan
-The Serial Peripheral Interface (SPI) is how data is transferred between the control unit and web server running on the Raspberry Pi. This is what allows the user to control the door lock and light switch from the website or Android application. Using SPI means there are only three wires that need to be connected to the control unit, which was crucial since there is not a lot of pins left over. Furthermore, the control unit is continuously scanning for input from the keypad, and SPI can be used with interrupts. This means the control unit will only stop scanning when the Raspberry Pi needs to communicate, instead of having to periodically check if the Pi has a message. Thus there will be less time wasted and the control unit will not be busy during a key press. 
+The Serial Peripheral Interface (SPI) is how data is transferred between the control unit and web server running on the Raspberry Pi. This is what allows the user to control the door lock and light switch from the website or Android application. Using SPI means only three wires need to be connected to the control unit, which was crucial since not a lot of pins are left over. Furthermore, the control unit is continuously scanning for input from the keypad, and SPI can be used with interrupts. This means the control unit will only stop scanning when the Raspberry Pi needs to communicate, instead of having to periodically check if the Pi has a message. Thus there will be less time wasted and the control unit will not be busy during a key press. 
 
-To further reduce time spent on communication, the control unit and Raspberry Pi communicate with single byte commands. Since there are few commands that would have to be sent, there is no need to spend time sending anything more.  
+To further reduce time spent on communication, the control unit and Raspberry Pi communicate with single byte commands. Since few commands would have to be sent, there is no need to spend time sending anything more.  
 
 % **********( Talk about both sides of the SPI communication on Pi and ATMEGA)******
 \subsection{Web Interface and Web Server}
+%Chris
 The web interface and Android application both have a similar look and setup to the interface. The web interface is hosted by the Raspberry Pi which is physically connected to the system that is mounted on the door. The web server that is hosting the website interface also provides information for the Android application to obtain. The website interface was designed with some programming logic and the frameworks PHP, JavaScript, and then the markup language of HTML. Figure \ref{fig:Website} below displays a screen shots of the user interface setup of the website interface. 
 
 
@@ -200,7 +347,7 @@ The web interface and Android application both have a similar look and setup to 
 \label{fig:Website}
 \end{figure}
 
-There are four pages that make up the entire website interface as can be seen above. First there is the dashboard or home page on the top left of Figure \ref{fig:Website} and this page is used to navigate to the three other pages. The top right page is the activity log which allows the user to see the current lock state, toggle the lock state, and view the past activity of the locks manipulation. The bottom left page is used to change the log in password for the Android application in the following section. Finally the bottom right page is used to view images of the doors surroundings and control the light bulb outside of the door. To view a current picture first the user must press the take picture button and once the camera status changes from "On" to "Off" this means the picture has been taken. Finally the user must click the current image being displayed on the web page in order to update to the picture that was just taken.  
+Four pages make up the entire website interface as can be seen above. First, the dashboard or home page on the top left of Figure \ref{fig:Website} and this page is used to navigate to the three other pages. The top right page is the activity log which allows the user to see the current lock state, toggle the lock state, and view the past activity of the locks manipulation. The bottom left page is used to change the log in password for the Android application in the following section. Finally the bottom right page is used to view images of the doors surroundings and control the light bulb outside of the door. To view a current picture first the user must press the take picture button and once the camera status changes from "On" to "Off" this means the picture has been taken. Finally the user must click the current image being displayed on the web page in order to update to the picture that was just taken.  
 
 The markup language HTML is used for displaying the information on the website shown above in a neat and user friendly manner. The HTML handles the displaying the buttons, text fields, images, and organizing the activity log in a table. A block diagram showing how the website software functions is shown below in Figure\ref{fig:Website_Block}.
 
@@ -210,10 +357,12 @@ The markup language HTML is used for displaying the information on the website s
 \caption{Website block diagram}
 \label{fig:Website_Block}
 \end{figure}
-In the Figure above there are two parts to the web interface which is the front-end which is ever thing the user can see and the back-end which is everything else behind the scenes on the web server. The HTML scripts provide a visual interface for the user to control the system and view information. These HTML web pages use JavaScript to call the external PHP files to retrieve the locks state, lights state, camera state, and activity data from an SQL database. The PHP files are also used to set new values if a lock, light, or camera state is toggled. The website interface also provides a web page that allows the owner of the system to change the password that is used to log into the Android application.
+
+The Figure above contains two parts to the web interface, the front-end which is ever thing the user can see, and the back-end which is everything else behind the scenes on the web server. The HTML scripts provide a visual interface for the user to control the system and view information. These HTML web pages use JavaScript to call the external PHP files to retrieve the locks state, lights state, camera state, and activity data from an SQL database. The PHP files are also used to set new values if a lock, light, or camera state is toggled. The website interface also provides a web page that allows the owner of the system to change the password that is used to log into the Android application.
 
 \subsection{Android Application}
-The Android application which was written entirely using the programming language know as Java. The look and feel of the Android application is extremely similar to the website interface and this can be seen below in Figure \ref{fig:Android_Application} which shows a few screen shots of the application.
+%Chris
+The Android application which was written using the programming language Java. The look and feel of the Android application is extremely similar to the website interface and this can be seen below in Figure \ref{fig:Android_Application} which shows a few screen shots of the application.
 
 \begin{figure}[H]
 \centering
@@ -222,9 +371,9 @@ The Android application which was written entirely using the programming languag
 \label{fig:Android_Application}
 \end{figure}
 
-As shown above the first page the user will see when the application is opened is the log in page. The log in requires a default user email that isn't changeable and a password which can be both changed from the website and Android application. When the log in button is pressed the application will web scrape the web server being hosted on the Raspberry Pi to check to see if the account exists. The next page is simply a homepage where the user can navigate to different parts of the application depending on what they would like to monitor at their home. The three other pages within this application are mainly using a web view of the web interface pages that would specifically designed for a mobile format on a smart phone. The web viewing technique is the reason that both the Android application and web site interface have such a similar look and feel. 
+As shown above the first page the user will see when the application is opened is the log in page. The log in requires a default user email that is not changeable and a password which can be both changed from the website and Android application. When the log in button is pressed the application will web scrape the web server being hosted on the Raspberry Pi to check to see if the account exists. The action of web scraping is used to extract images and information from the web server. The next page is simply a homepage where the user can navigate to different parts of the application depending on what they would like to monitor at their home. The three other pages within this application are mainly using a web view of the web interface pages that would specifically designed for a mobile format on a smart phone. The web viewing technique is the reason that both the Android application and web site interface have such a similar look and feel. 
 
-Outside of the software that was written to handle the text field, buttons, and web views there are two main parts to the software of this application. These parts consist of the method to web scrape the information from the web server and the background process to monitor the doorbell activity at the door. Below in Figure \ref{fig:Android_Block} shows how the software behind how the android application functions.
+The software of this application consists of three main parts. These parts consist of the handling of the text fields, buttons, and web views, the method to web scrape the information from the web server, and the background process to monitor the doorbell activity at the door. Below in Figure \ref{fig:Android_Block} shows how the software behind how the android application functions.
 
 \begin{figure}[H]
 \centering
@@ -233,20 +382,21 @@ Outside of the software that was written to handle the text field, buttons, and 
 \label{fig:Android_Block}
 \end{figure}
 
-The Figure above like the web interface has a front-end and a back-end. The front end is the three blocks grouped at the top of the figure. These pages allow the user to view information like the doors activity and see a picture of there doors surroundings. The back-end of the application uses web scraping to retrieve the users credentials to log it, doorbell state, and images of the doors surroundings. One extra feature added to the project was a doorbell monitoring feature which displays a notification as soon as the doorbell is rung. Figure \ref{fig:doorbell_screenshots} below shows screenshots of this feature.  
+The Android application like the web interface has a front-end and a back-end. The front end is the three blocks grouped at the top of the figure. These pages allow the user to view the doors activity and see a images of there doors surroundings. The back-end of the application uses web scraping to retrieve the users credentials to log it, doorbell state, and images of the doors surroundings. One extra feature added to the project was a doorbell monitoring feature which displays a notification as soon as the doorbell is rung. Figure \ref{fig:doorbell_screenshots} below shows screenshots of this feature.  
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.15,angle=0]{Doorbell_Monitoring_Screenshots.jpg}
-\caption{Screenshots of doorbell monitoring interface}
+\caption{Android application block diagram}
 \label{fig:doorbell_screenshots}
 \end{figure}
 
-The background process can be turned on or off from a page in the application and when the process is running it is checking the web server for the current state of the doorbell. As soon as the process sees that the doorbell has been pressed it will display a notification on the deceive to notify the user the doorbell has been rung.  A few seconds after this notification a second notification will pop up which if clicked on takes the user to a page that display four different pictures of the person who has rung the doorbell.
+The background process can be turned on or off from a page in the application and when the process is running it is checking the web server for the current state of the doorbell. As soon as the process sees that the doorbell has been pressed it will display a notification on the deceive to notify the user the doorbell has been rung.  A few seconds after this notification a second notification will pop up which if clicked on takes the user to a page that display four different images of the person who has rung the doorbell.
 
 % % % % % % % % % % % % % % %		
 % Results
 \chapter{Results}
+%Chris
 After the hardware was designed and the software was developed multiple tests were performed to verify each specification was met. All specifications (Table \ref{tab:specs_table} and Appendix B) from the proposed contract were met. Two extra features were added to the project and were successfully completed. These features include the doorbell monitoring feature and the lock position sensors. Table \ref{tab:specs_table} shows the contract specifications of this project.
 
 \begin{table}[H]
@@ -280,10 +430,15 @@ After the hardware was designed and the software was developed multiple tests we
 
 The only specification that requires the use of test equipment to properly verify the specification is the specification 1 in the Table shown above. The rest of the specifications can simply be verified by looking at the systems functions. The following sections will further discuss the verification methods for all of the specifications listed in Table \ref{tab:specs_table}.  
 
-\section{Stepper Motor}
-Jordan
+\section{Motor Driver and Door Lock}
+%Jordan
+
+The fundamental function of the Door Lock Monitoring System is the door lock, which is moved with the motor driver and the stepper motor. The stepper motor chosen requires high current to be able to move the door lock. The design of the motor driver enables it to supply the motor without fault. By designing the motor driver to use two total control pins per H-bridge, the motor driver will never be able to short power directly to ground. Thus, in case of an error with the control unit, the motor driver will not succumb to damage or be able to damage any other components of the system. 
+
+The specifications stated the door lock must open within three seconds, which is more than enough time for the Door Lock Monitoring System. The stepper motor is able to do this with ease, given no obstruction is in the lock. Furthermore, in the case of a slight obstruction, the motor driver can be controlled at a slower speed. By stepping slower, the motor is supplied more current and can overcome minor obstructions in the way of the lock. 
 
 \section{Keypad Interface}
+%Chris
 The password for this system needed to be entered via the keypad interface and the locks state needed to toggle in under 3 seconds. This specification was successfully met with the lock state toggling in around 1.5 seconds after the keypad password is entered. 
 
 The specification that the user would be able to reset the systems password on the keypad was met. To verify this specification the user can simple enter the key sequence of "0000" into the keypad and then the system will enter the password change mode. Next the user will have approximately 20 seconds to enter their current password before the system will cancel the password change request. After the password has been successfully verified by the system the user will have another 20 seconds to enter a new password. Finally, entering the old password to toggle the lock will not work and to verify that this specification was met the user can enter the new password which will toggle the locks state.
@@ -291,21 +446,22 @@ The specification that the user would be able to reset the systems password on t
 The keypad is also used to test the specification that a 120VAC light bulb could be turned on and off without the use of a relay. By pressing the '\#' button on the keypad shows that the light bulb can be controlled and by looking at the circuity of the system it can be seen that this was accomplished by using an optoisolator and a TRIAC instead of a relay.
 
 \section{Wireless Control}
-There are three specifications that involve the website and Android application interfaces to provide wireless control to the user of the system. The first specification states that the state of the lock will be displayed on the Android application and next to the keypad with LEDs. This specification was met and can be verified by going to the activity log page on the Android application and seeing the current state of the lock. The physical system also has a RGB LED that switch's between red and green depending on the current state of the lock.
+%Chris
+Three specifications involve the website and Android application interfaces to provide wireless control to the user of the system. The first specification states that the state of the lock will be displayed on the Android application and next to the keypad with LEDs. This specification was met and can be verified by going to the activity log page on the Android application and seeing the current state of the lock. The physical system also has a RGB LED that changes between red and green depending on the current state of the lock.
 
 The next specification involves displaying an activity log of the door locks lock/unlocks on both the website and Android application interfaces. This can be verified by going to the activity log pages on the two separate interfaces and seeing a log which displays the Date, Time, and Status of individual toggles of the lock. By using the method of webviews on the Android application increased the performance. The alternative method to this would be the use of background threads on the UI to manually retrieve or set information.
 
-The final wireless control specification is simply the viewing of a picture on the Android application. This picture also needs to be of the doors surroundings that and must be taken from a camera attached to the Raspberry Pi. This specification can be verified by first opening the camera feed tab on the android application. Once the page is loaded the next step is the take picture button must be pressed and this will instruct the camera to take a picture at that moment in time. The last step is the current image in the center of the page must be clicked to update to the picture that was just taken.
+The final wireless control specification is simply the viewing of a picture on the Android application. This picture also needs to be of the doors surroundings that and must be taken from a camera attached to the Raspberry Pi. This specification can be verified by first opening the camera feed tab on the Android application. Once the page is loaded the next step is the take picture button must be pressed and this will instruct the camera to take a picture at that moment in time. The last step is the current image in the center of the page must be clicked to update to the picture that was just taken.
 
 % % % % % % % % % % % % % % %		
 % Conclusion
 \chapter{Conclusion}
-Jordan
+%Jordan
 
-% % % % % % % % % % % % % % %		
-% Appendices
-\appendix
-\chapter{List of Sources}
+This report described the design of the Door Lock Monitoring System. The system takes a more functional approach to modern door lock, and brings a lot new conveniences. The lock adds new methods of entry through the keypad, Android application, and website. Security is improved with lock monitoring and a built in camera. The lock has a backup battery so it is reliable and will not fall short of an old fashioned lock and key. The Door Lock Monitoring System met all of the desired specifications and its image is a competent competitor to traditional locks.
+
+
+\section*{References}
 [1] Andras Tantos, “H-Bridges - the basics”, www.modularcircuits.com/blog/articles/h-bridge-secrets/h-bridges-the-basics/
 
 [2] Robot Room, “H-Bridge Motor Driver Using Bipolar Transistors”, www.robotroom.com/BipolarHBridge.html
@@ -314,11 +470,9 @@ Jordan
 
 [4] AsmyIdof StackExchange user, “Transistor Battery Backup Circuit”, www.electronics.stackexchange.com/a/179355
 
-[5] Dakota Carll and Chris Martin, Advice on Battery Backup component selection
-
-[6] Andrew Sheaff and Nuri Emanetoglu
-
-[7] Nick Levesque, Soldering equipment and advice
+% % % % % % % % % % % % % % %		
+% Appendices
+\appendix
 \chapter{Project Contract}
 \textbf{Summary \& Function:}
 
@@ -361,7 +515,7 @@ This project will allow a user to unlock or lock a door in a short period of tim
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.65, angle=0]{Schematic.JPG}
-\label{fig:BlockDiag}
+\label{fig:Block_Diag}
 \end{figure}
 
 \chapter{Parts List}
